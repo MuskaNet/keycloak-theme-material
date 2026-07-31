@@ -1,0 +1,111 @@
+@let url = kcContext.url;
+@let realm = kcContext.realm;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('webauthn-registration-title') }}
+</ng-template>
+
+<!-- Hidden protocol form for webauthnRegister.js — must stay outside the card layout -->
+<form
+  id="register"
+  method="post"
+  [action]="url.loginAction"
+  style="display: none"
+>
+  <input
+    id="clientDataJSON"
+    name="clientDataJSON"
+    type="hidden"
+  />
+  <input
+    id="attestationObject"
+    name="attestationObject"
+    type="hidden"
+  />
+  <input
+    id="publicKeyCredentialId"
+    name="publicKeyCredentialId"
+    type="hidden"
+  />
+  <input
+    id="authenticatorLabel"
+    name="authenticatorLabel"
+    type="hidden"
+  />
+  <input
+    id="transports"
+    name="transports"
+    type="hidden"
+  />
+  <input
+    id="error"
+    name="error"
+    type="hidden"
+  />
+</form>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <div
+      class="kc-page-logo"
+      [innerHTML]="realm.displayNameHtml ?? '' | kcSanitize: 'html'"
+    ></div>
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+
+  <div class="kc-page-form">
+    <div class="kc-page-form-layout">
+      <div class="kc-form-content">
+        <p class="kc-instruction">{{ i18n.msgStr('webauthn-registration-title') }}</p>
+
+        <mat-checkbox
+          id="logout-sessions"
+          name="logout-sessions"
+          value="on"
+          [checked]="true"
+          form="register"
+        >
+          {{ i18n.msgStr('logoutOtherSessions') }}
+        </mat-checkbox>
+      </div>
+
+      <div class="kc-form-submit">
+        @if (!kcContext.isSetRetry && kcContext.isAppInitiatedAction) {
+          <form
+            id="kc-webauthn-settings-form"
+            method="post"
+            [action]="url.loginAction"
+            style="display: contents"
+          >
+            <button
+              mat-stroked-button
+              type="submit"
+              id="cancelWebAuthnAIA"
+              name="cancel-aia"
+              value="true"
+            >
+              {{ i18n.msgStr('doCancel') }}
+            </button>
+          </form>
+        }
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          id="authenticateWebAuthnButton"
+          (click)="isRegistering.set(true)"
+          [disabled]="isRegistering()"
+        >
+          @if (isRegistering()) {
+            <mat-spinner
+              diameter="20"
+              class="kc-spinner"
+            ></mat-spinner>
+          }
+          <mat-icon>key</mat-icon>
+          {{ i18n.msgStr('doRegister') }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

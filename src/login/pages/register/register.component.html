@@ -87,18 +87,16 @@
             mat-stroked-button
             class="kc-register-back"
             [href]="url.loginUrl"
-          >
-            {{ i18n.msgStr('backToLogin') }}
-          </a>
+            [innerHTML]="i18n.msgStr('backToLogin') | kcSanitize: 'html'"
+          ></a>
         } @else {
           <button
             mat-stroked-button
             type="button"
             class="kc-register-back"
             (click)="previousStep()"
-          >
-            {{ i18n.msgStr('doBack') }}
-          </button>
+            [innerHTML]="i18n.msgStr('doBack') | kcSanitize: 'html'"
+          ></button>
         }
 
         @if (!isLastStep) {

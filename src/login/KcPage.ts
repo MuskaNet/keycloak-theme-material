@@ -93,6 +93,25 @@ export async function getKcPage(pageId: KcContext['pageId']): Promise<KcPage> {
         doUseDefaultCss,
         classes,
       };
+    case 'webauthn-register.ftl':
+      return {
+        PageComponent: (await import('./pages/webauthn-register/webauthn-register.component'))
+          .WebauthnRegisterComponent,
+        TemplateComponent,
+        UserProfileFormFieldsComponent,
+        doMakeUserConfirmPassword,
+        doUseDefaultCss,
+        classes,
+      };
+    case 'login-config-totp.ftl':
+      return {
+        PageComponent: (await import('./pages/login-config-totp/login-config-totp.component')).LoginConfigTotpComponent,
+        TemplateComponent,
+        UserProfileFormFieldsComponent,
+        doMakeUserConfirmPassword,
+        doUseDefaultCss,
+        classes,
+      };
     case 'register.ftl':
       return {
         PageComponent: (await import('./pages/register/register.component')).RegisterComponent,
