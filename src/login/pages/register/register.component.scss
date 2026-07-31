@@ -1,0 +1,207 @@
+.kc-register-card {
+  display: flex;
+  width: 100%;
+  height: min(380px, calc(100dvh - 128px));
+  min-height: 0;
+  max-width: 960px;
+  border-radius: 28px;
+  background-color: var(--mat-sys-surface-container-low);
+  overflow: hidden;
+}
+
+.kc-register-card {
+  box-sizing: border-box;
+}
+
+.kc-register-card .kc-login-brand {
+  flex: 0 0 40%;
+  padding: 48px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.kc-register-card .kc-login-logo {
+  margin-bottom: 16px;
+  color: var(--mat-sys-primary);
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.kc-register-card .kc-login-logo img {
+  max-height: 48px;
+}
+
+.kc-register-card .kc-login-title {
+  margin: 0;
+  color: var(--mat-sys-on-surface);
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.kc-register-card .kc-login-form {
+  flex: 0 0 60%;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.kc-register-form {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+}
+
+.kc-register-content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+
+.kc-register-form .kc-profile-field {
+  display: block;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.kc-register-form .kc-profile-label {
+  margin-bottom: 4px;
+}
+
+.kc-register-terms {
+  display: flex;
+  color: var(--mat-sys-on-primary);
+  flex-direction: column;
+  gap: 6px;
+  margin: 2px 0 6px;
+}
+
+.kc-register-terms h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.kc-register-terms p {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.kc-register-recaptcha {
+  overflow-x: auto;
+  padding: 4px 0;
+}
+
+.kc-register-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.kc-register-back {
+  flex-shrink: 0;
+  min-width: 120px;
+  height: 44px;
+  border-radius: 28px;
+}
+
+.kc-register-submit {
+  min-width: 132px;
+  min-height: 44px;
+  border-radius: 24px;
+}
+
+@media (max-width: 768px) {
+  .kc-register-card {
+    flex-direction: column;
+    height: auto;
+    min-height: 0;
+    border-radius: 0;
+    background-color: transparent;
+    overflow: visible;
+  }
+
+  .kc-register-card .kc-login-brand {
+    flex: auto;
+    padding: 32px 24px 0;
+  }
+
+  .kc-register-card .kc-login-form {
+    flex: auto;
+    padding: 24px;
+    min-height: 0;
+  }
+
+  .kc-register-card .kc-register-progress {
+    margin-top: 16px;
+  }
+
+  .kc-register-form .kc-profile-field {
+    margin-bottom: 4px;
+  }
+
+  .kc-register-form .kc-profile-label {
+    margin-bottom: 8px;
+  }
+
+  .kc-register-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .kc-register-submit,
+  .kc-register-back {
+    width: 100%;
+  }
+}
+
+.kc-register-progress {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+  margin-top: 24px;
+}
+
+.kc-register-progress span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--mat-sys-outline-variant);
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.kc-register-progress .kc-register-progress-active {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+@media (max-height: 700px) and (min-width: 601px) {
+  .kc-register-card .kc-login-brand,
+  .kc-register-card .kc-login-form {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  .kc-register-actions {
+    margin-top: 6px;
+  }
+}

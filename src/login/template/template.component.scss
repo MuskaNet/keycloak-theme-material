@@ -1,0 +1,128 @@
+:host {
+  display: block;
+  height: 100%;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+
+.kc-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100dvh;
+  max-height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+  padding: 20px 24px 12px;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+.kc-locale {
+  flex-shrink: 0;
+}
+
+.kc-locale-button {
+  font-size: 14px;
+}
+
+.kc-auth-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  overflow: auto;
+}
+
+.kc-page-wrap {
+  width: 100%;
+  max-width: 960px;
+  max-height: 100%;
+}
+
+.kc-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  max-width: 960px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.kc-alert-icon {
+  flex-shrink: 0;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.kc-alert-message {
+  flex: 1;
+}
+
+.kc-alert-success {
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+  color: var(--mat-sys-primary);
+}
+
+.kc-alert-warning {
+  background-color: color-mix(in srgb, #f59e0b 12%, transparent);
+  color: #b45309;
+}
+
+.kc-alert-info {
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+  color: var(--mat-sys-primary);
+}
+
+.kc-alert-error {
+  background-color: color-mix(in srgb, var(--mat-sys-error) 12%, transparent);
+  color: var(--mat-sys-error);
+}
+
+@media (prefers-color-scheme: dark) {
+  .kc-alert-warning {
+    background-color: color-mix(in srgb, #fbbf24 12%, transparent);
+    color: #fbbf24;
+  }
+}
+
+.kc-try-another-way {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.kc-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 960px;
+  min-height: 48px;
+  padding-bottom: 12px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+@media (max-width: 600px) {
+  .kc-shell {
+    padding: 12px 16px 8px;
+  }
+
+  .kc-auth-stage {
+    align-items: flex-start;
+    padding: 8px 0;
+  }
+
+  .kc-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 4px 12px;
+  }
+}

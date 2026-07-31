@@ -1,0 +1,76 @@
+@let url = kcContext.url;
+@let otpLogin = kcContext.otpLogin;
+@let messagesPerField = kcContext.messagesPerField;
+@let realm = kcContext.realm;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('doLogIn') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <div
+      class="kc-page-logo"
+      [innerHTML]="realm.displayNameHtml ?? '' | kcSanitize: 'html'"
+    ></div>
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <form
+      id="kc-otp-login-form"
+      method="post"
+      class="kc-page-content"
+      [action]="url.loginAction"
+    >
+      <div class="kc-form-content">
+        @if (otpLogin.userOtpCredentials.length > 1) {
+          <mat-radio-group
+            class="kc-otp-credentials"
+            name="selectedCredentialId"
+          >
+            @for (otpCredential of otpLogin.userOtpCredentials; track otpCredential; let i = $index) {
+              <mat-radio-button
+                [id]="'kc-otp-credential-' + i"
+                [value]="otpCredential.id"
+                [checked]="otpCredential.id === otpLogin.selectedCredentialId"
+              >
+                {{ otpCredential.userLabel }}
+              </mat-radio-button>
+            }
+          </mat-radio-group>
+        }
+
+        <mat-form-field
+          appearance="outline"
+          class="kc-field"
+        >
+          <mat-label>{{ i18n.msgStr('loginOtpOneTime') }}</mat-label>
+          <input
+            matInput
+            id="otp"
+            name="otp"
+            autocomplete="off"
+            type="text"
+            autofocus
+            [attr.aria-invalid]="messagesPerField.existsError('totp')"
+          />
+          @if (messagesPerField.existsError('totp')) {
+            <mat-error [innerHTML]="messagesPerField.get('totp') | kcSanitize: 'html'"></mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="kc-form-submit">
+        <button
+          mat-flat-button
+          color="primary"
+          name="login"
+          id="kc-login"
+          type="submit"
+        >
+          {{ i18n.msgStr('doLogIn') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

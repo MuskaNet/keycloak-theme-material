@@ -1,0 +1,31 @@
+.kc-profile-field-hidden {
+  display: none;
+}
+:host {
+  display: contents;
+}
+
+.kc-profile-field {
+  display: block;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.kc-profile-radios,
+.kc-profile-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.kc-profile-label {
+  font-size: 14px;
+  color: var(--mat-sys-on-surface);
+  margin-bottom: 8px;
+}
+
+.kc-profile-add-btn {
+  width: 100%;
+  margin-bottom: 16px;
+}

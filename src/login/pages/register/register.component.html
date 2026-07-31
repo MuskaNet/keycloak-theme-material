@@ -1,0 +1,140 @@
+@let url = kcContext.url;
+@let messagesPerField = kcContext.messagesPerField;
+@let recaptchaRequired = kcContext.recaptchaRequired;
+@let recaptchaVisible = kcContext.recaptchaVisible;
+@let recaptchaSiteKey = kcContext.recaptchaSiteKey;
+@let recaptchaAction = kcContext.recaptchaAction;
+@let termsAcceptanceRequired = kcContext.termsAcceptanceRequired;
+
+<ng-template #headerNode>
+  {{ kcContext.messageHeader ?? i18n.advancedMsgStr('registerTitle') }}
+</ng-template>
+
+<div class="kc-login-card kc-register-card">
+  <div class="kc-login-brand">
+    <div
+      class="kc-login-logo"
+      [innerHTML]="kcContext.realm.displayNameHtml ?? '' | kcSanitize: 'html'"
+    ></div>
+    <h1 class="kc-login-title">
+      @if (headerNode) {
+        <ng-container [ngTemplateOutlet]="headerNode" />
+      }
+    </h1>
+
+    @if (hasMultipleSteps) {
+      <div
+        class="kc-register-progress"
+        [attr.aria-label]="i18n.msgStr('registerTitle')"
+      >
+        @for (step of registrationSteps(); track $index) {
+          <span [class.kc-register-progress-active]="$index === registrationStep()">{{ $index + 1 }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="kc-login-form">
+    <form
+      id="kc-register-form"
+      method="post"
+      [action]="url.registrationAction"
+      class="kc-register-form"
+    >
+      <div class="kc-register-content">
+        <ng-container
+          [ngComponentOutlet]="userProfileFormFields() ?? null"
+          [ngComponentOutletInputs]="{ visibleFieldNames: visibleFieldNames() }"
+        />
+
+        @if (termsAcceptanceRequired && isLastStep) {
+          <section class="kc-register-terms">
+            <h2>{{ i18n.msgStr('termsTitle') }}</h2>
+            <p id="kc-registration-terms-text">{{ i18n.msgStr('termsText') }}</p>
+            <mat-checkbox
+              id="termsAccepted"
+              name="termsAccepted"
+              [checked]="areTermsAccepted()"
+              [attr.aria-invalid]="messagesPerField.existsError('termsAccepted')"
+              (change)="areTermsAccepted.set($event.checked)"
+            >
+              {{ i18n.msgStr('acceptTerms') }}
+            </mat-checkbox>
+            @if (messagesPerField.existsError('termsAccepted')) {
+              <mat-error
+                id="input-error-terms-accepted"
+                [innerHTML]="messagesPerField.get('termsAccepted') | kcSanitize: 'html'"
+              ></mat-error>
+            }
+          </section>
+        }
+
+        @if (recaptchaRequired && isLastStep && (recaptchaVisible || recaptchaAction === undefined)) {
+          <div class="kc-register-recaptcha">
+            <div
+              class="g-recaptcha"
+              data-size="compact"
+              [attr.data-sitekey]="recaptchaSiteKey"
+              [attr.data-action]="recaptchaAction"
+            ></div>
+          </div>
+        }
+      </div>
+
+      <div class="kc-register-actions">
+        @if (registrationStep() === 0) {
+          <a
+            mat-stroked-button
+            class="kc-register-back"
+            [href]="url.loginUrl"
+          >
+            {{ i18n.msgStr('backToLogin') }}
+          </a>
+        } @else {
+          <button
+            mat-stroked-button
+            type="button"
+            class="kc-register-back"
+            (click)="previousStep()"
+          >
+            {{ i18n.msgStr('doBack') }}
+          </button>
+        }
+
+        @if (!isLastStep) {
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            class="kc-register-submit"
+            (click)="nextStep()"
+          >
+            {{ i18n.msgStr('doContinue') }}
+          </button>
+        } @else if (recaptchaRequired && !recaptchaVisible && recaptchaAction !== undefined) {
+          <button
+            mat-flat-button
+            color="primary"
+            class="g-recaptcha kc-register-submit"
+            type="submit"
+            [attr.data-sitekey]="recaptchaSiteKey"
+            data-callback="onSubmitRecaptcha"
+            [attr.data-action]="recaptchaAction"
+          >
+            {{ i18n.msgStr('doRegister') }}
+          </button>
+        } @else {
+          <button
+            mat-flat-button
+            color="primary"
+            class="kc-register-submit"
+            type="submit"
+            [disabled]="!isFormSubmittable() || (termsAcceptanceRequired && !areTermsAccepted())"
+          >
+            {{ i18n.msgStr('doRegister') }}
+          </button>
+        }
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+@let message = kcContext.message;
+@let skipLink = kcContext.skipLink;
+@let client = kcContext.client;
+@let realm = kcContext.realm;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('errorTitle') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <div
+      class="kc-page-logo"
+      [innerHTML]="realm.displayNameHtml ?? '' | kcSanitize: 'html'"
+    ></div>
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <div class="kc-page-form-layout">
+      <div class="kc-form-content">
+        <p
+          class="kc-instruction"
+          [innerHTML]="message.summary | kcSanitize: 'html'"
+        ></p>
+      </div>
+      @if (!skipLink && !!client?.baseUrl) {
+        <div class="kc-form-submit">
+          <a
+            mat-flat-button
+            color="primary"
+            id="backToApplication"
+            [href]="client.baseUrl"
+            [innerHTML]="i18n.msgStr('backToApplication') | kcSanitize: 'html'"
+          ></a>
+        </div>
+      }
+    </div>
+  </div>
+</div>

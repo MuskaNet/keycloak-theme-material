@@ -1,0 +1,275 @@
+@let realm = kcContext.realm;
+@let usernameHidden = kcContext.usernameHidden;
+@let auth = kcContext.auth;
+@let messagesPerField = kcContext.messagesPerField;
+@let url = kcContext.url;
+@let login = kcContext.login;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('loginAccountTitle') }}
+</ng-template>
+
+<ng-template #socialProvidersNode>
+  @let social = kcContext.social;
+  @if (!!social?.providers?.length) {
+    <div class="kc-social-providers">
+      <div class="kc-social-buttons">
+        @for (provider of social?.providers; track provider.alias) {
+          <a
+            mat-icon-button
+            [href]="provider.loginUrl"
+            [id]="provider.alias"
+            class="kc-social-icon-btn"
+            [attr.aria-label]="provider.displayName"
+          >
+            @if (provider.iconClasses) {
+              <i
+                aria-hidden="true"
+                [ngClass]="provider.iconClasses"
+              ></i>
+            }
+          </a>
+        }
+      </div>
+    </div>
+  }
+</ng-template>
+
+<div class="kc-login-card">
+  <div class="kc-login-brand">
+    <div
+      class="kc-login-logo"
+      [innerHTML]="realm?.displayNameHtml ?? '' | kcSanitize: 'html'"
+    ></div>
+    @if (auth && auth.showUsername && !auth.showResetCredentials) {
+      <div class="kc-login-attempted">
+        <span class="kc-attempted-username-label">{{ auth?.attemptedUsername }}</span>
+        <a
+          mat-button
+          class="kc-restart-login"
+          [href]="url?.loginRestartFlowUrl"
+          [attr.aria-label]="i18n.msgStr('restartLoginTooltip')"
+        >
+          <mat-icon>refresh</mat-icon>
+          {{ i18n.msgStr('restartLoginTooltip') }}
+        </a>
+      </div>
+    } @else {
+      <h1 class="kc-login-title">
+        @if (headerNode) {
+          <ng-container [ngTemplateOutlet]="headerNode" />
+        }
+      </h1>
+    }
+    @if (displayRequiredFields) {
+      <div class="kc-required-fields">
+        <span class="kc-required-mark">*</span>
+        {{ i18n.msgStr('requiredFields') }}
+      </div>
+    }
+  </div>
+
+  <div class="kc-login-form">
+    @if (realm?.password) {
+      <form
+        id="kc-form-login"
+        method="post"
+        [action]="url?.loginAction"
+        (onSubmit)="isLoginButtonDisabled.set(true)"
+      >
+        <div class="kc-form-content">
+          @if (!usernameHidden) {
+            <mat-form-field
+              appearance="outline"
+              class="kc-field"
+            >
+              <mat-label>
+                @if (!realm?.loginWithEmailAllowed) {
+                  {{ i18n.msgStr('username') }}
+                } @else if (!realm?.registrationEmailAsUsername) {
+                  {{ i18n.msgStr('usernameOrEmail') }}
+                } @else {
+                  {{ i18n.msgStr('email') }}
+                }
+              </mat-label>
+              <input
+                matInput
+                tabindex="2"
+                id="username"
+                name="username"
+                type="text"
+                autofocus
+                [autocomplete]="kcContext.enableWebAuthnConditionalUI === true ? 'username webauthn' : 'username'"
+                [defaultValue]="login?.username || ''"
+                [attr.aria-invalid]="messagesPerField?.existsError('username', 'password')"
+              />
+              @if (kcContext.enableWebAuthnConditionalUI === true) {
+                <button
+                  mat-icon-button
+                  matSuffix
+                  type="button"
+                  id="authenticateWebAuthnButton"
+                  [attr.aria-label]="i18n.msgStr('passkey-doAuthenticate')"
+                >
+                  <mat-icon>fingerprint</mat-icon>
+                </button>
+              }
+              @if (messagesPerField?.existsError('username', 'password')) {
+                <mat-error
+                  [innerHTML]="messagesPerField.getFirstError('username', 'password') | kcSanitize: 'html'"
+                ></mat-error>
+              }
+            </mat-form-field>
+          }
+
+          <mat-form-field
+            appearance="outline"
+            class="kc-field"
+          >
+            <mat-label>{{ i18n.msgStr('password') }}</mat-label>
+            <input
+              matInput
+              tabindex="3"
+              id="password"
+              name="password"
+              [type]="isPasswordVisible() ? 'text' : 'password'"
+              autocomplete="current-password"
+              [attr.aria-invalid]="messagesPerField.existsError('username', 'password')"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="i18n.msgStr('showPassword')"
+            >
+              <mat-icon>{{ isPasswordVisible() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (usernameHidden && messagesPerField?.existsError('username', 'password')) {
+              <mat-error
+                [innerHTML]="messagesPerField.getFirstError('username', 'password') | kcSanitize: 'html'"
+              ></mat-error>
+            }
+          </mat-form-field>
+
+          <div class="kc-form-options">
+            @if (realm?.rememberMe && !usernameHidden) {
+              <mat-checkbox
+                tabindex="5"
+                id="rememberMe"
+                [checked]="!!login?.rememberMe"
+                (change)="rememberMeChecked.set($event.checked)"
+              >
+                {{ i18n.msgStr('rememberMe') }}
+              </mat-checkbox>
+              <input
+                type="hidden"
+                name="rememberMe"
+                [value]="rememberMeChecked()"
+              />
+            }
+            @if (realm?.resetPasswordAllowed) {
+              <a
+                mat-button
+                [href]="url?.loginResetCredentialsUrl"
+                class="kc-forgot-password"
+                tabindex="6"
+              >
+                {{ i18n.msgStr('doForgotPassword') }}
+              </a>
+            }
+          </div>
+        </div>
+
+        <div class="kc-form-submit">
+          <input
+            type="hidden"
+            id="id-hidden-input"
+            name="credentialId"
+            [value]="auth?.selectedCredential"
+          />
+          @if (url?.registrationUrl) {
+            <a
+              mat-stroked-button
+              class="kc-register-login-button"
+              [href]="url.registrationUrl"
+            >
+              {{ i18n.msgStr('doRegister') }}
+            </a>
+          }
+          <button
+            mat-flat-button
+            color="primary"
+            tabindex="7"
+            name="login"
+            id="kc-login"
+            type="submit"
+            class="kc-login-button"
+            [disabled]="isLoginButtonDisabled()"
+          >
+            @if (isLoginButtonDisabled()) {
+              <mat-spinner
+                diameter="20"
+                class="kc-spinner"
+              ></mat-spinner>
+            }
+            {{ i18n.msgStr('doLogIn') }}
+          </button>
+        </div>
+      </form>
+
+      @if (kcContext.enableWebAuthnConditionalUI === true) {
+        <form
+          id="webauth"
+          method="post"
+          [action]="url.loginAction"
+        >
+          <input
+            id="clientDataJSON"
+            name="clientDataJSON"
+            type="hidden"
+          />
+          <input
+            id="authenticatorData"
+            name="authenticatorData"
+            type="hidden"
+          />
+          <input
+            id="signature"
+            name="signature"
+            type="hidden"
+          />
+          <input
+            id="credentialId"
+            name="credentialId"
+            type="hidden"
+          />
+          <input
+            id="userHandle"
+            name="userHandle"
+            type="hidden"
+          />
+          <input
+            id="error"
+            name="error"
+            type="hidden"
+          />
+        </form>
+
+        <form id="authn_select">
+          @for (authenticator of kcContext.authenticators?.authenticators ?? []; track authenticator.credentialId) {
+            <input
+              name="authn_use_chk"
+              type="hidden"
+              [value]="authenticator.credentialId"
+            />
+          }
+        </form>
+      }
+    }
+  </div>
+</div>
+
+@if (socialProvidersNode) {
+  <ng-container [ngTemplateOutlet]="socialProvidersNode" />
+}

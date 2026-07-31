@@ -1,0 +1,43 @@
+@let url = kcContext.url;
+@let realm = kcContext.realm;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('termsTitle') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <div
+      class="kc-page-logo"
+      [innerHTML]="realm.displayNameHtml ?? '' | kcSanitize: 'html'"
+    ></div>
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <div class="kc-terms-text">{{ i18n.msgStr('termsText') }}</div>
+    <form
+      class="kc-form-submit"
+      method="POST"
+      [action]="url.loginAction"
+    >
+      <button
+        mat-flat-button
+        color="primary"
+        name="accept"
+        id="kc-accept"
+        type="submit"
+      >
+        {{ i18n.msgStr('doAccept') }}
+      </button>
+      <button
+        mat-stroked-button
+        name="cancel"
+        id="kc-decline"
+        type="submit"
+        class="kc-decline"
+      >
+        {{ i18n.msgStr('doDecline') }}
+      </button>
+    </form>
+  </div>
+</div>

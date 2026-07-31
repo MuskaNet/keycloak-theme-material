@@ -1,0 +1,140 @@
+@let realm = kcContext.realm;
+@let usernameHidden = kcContext.usernameHidden;
+@let messagesPerField = kcContext.messagesPerField;
+@let url = kcContext.url;
+@let login = kcContext.login;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('doLogIn') }}
+</ng-template>
+
+<ng-template #socialProvidersNode>
+  @let social = kcContext.social;
+  @if (!!social?.providers?.length) {
+    <div class="kc-social-providers">
+      <div class="kc-social-buttons">
+        @for (provider of social?.providers; track provider.alias) {
+          <a
+            mat-icon-button
+            [href]="provider.loginUrl"
+            [id]="provider.alias"
+            class="kc-social-icon-btn"
+            [attr.aria-label]="provider.displayName"
+          >
+            @if (provider.iconClasses) {
+              <i
+                aria-hidden="true"
+                [ngClass]="provider.iconClasses"
+              ></i>
+            }
+          </a>
+        }
+      </div>
+    </div>
+  }
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <div
+      class="kc-page-logo"
+      [innerHTML]="realm.displayNameHtml ?? '' | kcSanitize: 'html'"
+    ></div>
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    @if (realm.password) {
+      <form
+        id="kc-form-login"
+        method="post"
+        [action]="url?.loginAction"
+        (onSubmit)="isLoginButtonDisabled.set(true)"
+      >
+        <div class="kc-form-content">
+          @if (!usernameHidden) {
+            <mat-form-field
+              appearance="outline"
+              class="kc-field"
+            >
+              <mat-label>
+                @if (!realm?.loginWithEmailAllowed) {
+                  {{ i18n.msgStr('username') }}
+                } @else if (!realm?.registrationEmailAsUsername) {
+                  {{ i18n.msgStr('usernameOrEmail') }}
+                } @else {
+                  {{ i18n.msgStr('email') }}
+                }
+              </mat-label>
+              <input
+                matInput
+                tabindex="2"
+                id="username"
+                name="username"
+                type="text"
+                autofocus
+                autocomplete="username"
+                [defaultValue]="login?.username || ''"
+                [attr.aria-invalid]="messagesPerField?.existsError('username')"
+              />
+              @if (messagesPerField?.existsError('username')) {
+                <mat-error [innerHTML]="messagesPerField.getFirstError('username') | kcSanitize: 'html'"></mat-error>
+              }
+            </mat-form-field>
+          }
+
+          <div class="kc-form-options">
+            @if (realm.rememberMe && !usernameHidden) {
+              <mat-checkbox
+                tabindex="5"
+                id="rememberMe"
+                [checked]="!!login?.rememberMe"
+                (change)="rememberMeChecked.set($event.checked)"
+              >
+                {{ i18n.msgStr('rememberMe') }}
+              </mat-checkbox>
+              <input
+                type="hidden"
+                name="rememberMe"
+                [value]="rememberMeChecked()"
+              />
+            }
+          </div>
+        </div>
+
+        <div class="kc-form-submit">
+          @if (url?.registrationUrl) {
+            <a
+              mat-stroked-button
+              class="kc-register-login-button"
+              [href]="url.registrationUrl"
+            >
+              {{ i18n.msgStr('doRegister') }}
+            </a>
+          }
+          <button
+            mat-flat-button
+            color="primary"
+            tabindex="4"
+            name="login"
+            id="kc-login"
+            type="submit"
+            class="kc-login-button"
+            [disabled]="isLoginButtonDisabled()"
+          >
+            @if (isLoginButtonDisabled()) {
+              <mat-spinner
+                diameter="20"
+                class="kc-spinner"
+              ></mat-spinner>
+            }
+            {{ i18n.msgStr('doLogIn') }}
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>
+
+@if (socialProvidersNode) {
+  <ng-container [ngTemplateOutlet]="socialProvidersNode" />
+}

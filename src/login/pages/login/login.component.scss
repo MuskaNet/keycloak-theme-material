@@ -1,0 +1,209 @@
+@use '../page-common.scss';
+
+.kc-login-card {
+  display: flex;
+  width: 100%;
+  height: min(380px, calc(100dvh - 128px));
+  min-height: 0;
+  border-radius: 28px;
+  background-color: var(--mat-sys-surface-container-low);
+  overflow: hidden;
+}
+
+.kc-login-brand {
+  flex: 0 0 40%;
+  padding: 48px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.kc-login-logo {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--mat-sys-primary);
+  margin-bottom: 16px;
+
+  img {
+    max-height: 48px;
+  }
+}
+
+.kc-login-title {
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0;
+  color: var(--mat-sys-on-surface);
+}
+
+.kc-login-attempted {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kc-attempted-username-label {
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+}
+
+.kc-required-fields {
+  font-size: 13px;
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: 12px;
+}
+
+.kc-required-mark {
+  color: var(--mat-sys-error);
+  margin-right: 2px;
+}
+
+.kc-login-form {
+  flex: 0 0 60%;
+  padding: 48px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.kc-login-form #kc-form-login,
+.kc-login-form #kc-passwd-update-form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.kc-form-content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+
+#webauth,
+#authn_select {
+  display: none;
+}
+
+.kc-field {
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.kc-form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 8px 0 16px;
+}
+
+.kc-forgot-password {
+  font-size: 14px;
+}
+
+.kc-form-submit {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.kc-register-login-button {
+  min-width: 120px;
+  height: 44px;
+  border-radius: 28px;
+}
+
+.kc-login-button {
+  min-width: 120px;
+  height: 44px;
+  font-size: 15px;
+  border-radius: 28px;
+}
+
+.kc-spinner {
+  display: inline-block;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.kc-social-providers {
+  display: flex;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 16px;
+  margin-left: auto;
+  margin-bottom: 0;
+  padding: 8px 12px;
+  border-radius: 28px;
+  background-color: var(--mat-sys-surface-container-low);
+}
+
+.kc-social-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.kc-social-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  color: var(--mat-sys-on-surface-variant);
+
+  i {
+    display: block;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  &:hover {
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+.kc-info {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+@media (max-width: 768px) {
+  .kc-login-card {
+    flex-direction: column;
+    height: auto;
+    min-height: 0;
+    border-radius: 0;
+    background-color: transparent;
+    overflow: visible;
+  }
+
+  .kc-login-brand {
+    flex: auto;
+    padding: 32px 24px 0;
+  }
+
+  .kc-login-form {
+    flex: auto;
+    padding: 24px;
+    min-height: 0;
+  }
+
+  .kc-form-submit {
+    justify-content: stretch;
+  }
+
+  .kc-register-login-button,
+  .kc-login-button {
+    flex: 1;
+  }
+}

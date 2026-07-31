@@ -1,0 +1,66 @@
+@use '@angular/material' as mat;
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+
+$theme-config: (
+  color: (
+    theme-type: light,
+    primary: mat.$rose-palette,
+    tertiary: mat.$blue-palette,
+  ),
+  typography: (
+    plain-family: (Roboto, 'Helvetica Neue', sans-serif),
+    brand-family: (Roboto, 'Helvetica Neue', sans-serif),
+  ),
+  density: (
+    scale: 0,
+  ),
+);
+
+$dark-theme-config: (
+  color: (
+    theme-type: dark,
+    primary: mat.$rose-palette,
+    tertiary: mat.$blue-palette,
+  ),
+  typography: (
+    plain-family: (Roboto, 'Helvetica Neue', sans-serif),
+    brand-family: (Roboto, 'Helvetica Neue', sans-serif),
+  ),
+  density: (
+    scale: 0,
+  ),
+);
+
+$theme: mat.define-theme($theme-config);
+$dark-theme: mat.define-theme($dark-theme-config);
+
+html {
+  // Emits the `--mat-sys-*` system-level tokens used by the custom CSS below.
+  @include mat.theme($theme-config);
+  @include mat.all-component-themes($theme);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    @include mat.theme($dark-theme-config);
+    @include mat.all-component-themes($dark-theme);
+    color-scheme: dark;
+  }
+}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}

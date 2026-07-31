@@ -1,0 +1,255 @@
+@let formState = formState$ | async;
+@if (formState) {
+  @for (fieldState of formState.formFieldStates; track trackByField($index, fieldState)) {
+    @let attr = fieldState.attribute;
+    @let values = $any(fieldState.valueOrValues);
+    @let errors = fieldState.displayableErrors;
+    @let type = attr.annotations?.inputType;
+    @let multivalued = isMultivalued(attr);
+    @let options = getOptions(attr);
+
+    @if (type === 'hidden') {
+      <input
+        type="hidden"
+        [name]="attr.name"
+        [value]="values"
+      />
+    } @else if (attr.name === 'password-confirm' && !doMakeUserConfirmPassword) {
+    } @else {
+      <div [class.kc-profile-field-hidden]="!isFieldVisible(attr.name)">
+        <!-- Text / password / email / url / tel / number / date etc -->
+        @if (type === 'textarea') {
+          <mat-form-field
+            appearance="outline"
+            class="kc-profile-field"
+          >
+            <mat-label
+              >{{ getLabel(attr.displayName) }}
+              @if (attr.required) {
+                *
+              }
+            </mat-label>
+            <textarea
+              matInput
+              [id]="attr.name"
+              [name]="attr.name"
+              [value]="values"
+              [readonly]="attr.readOnly"
+              [autocomplete]="attr.autocomplete"
+              [placeholder]="getLabel(attr.annotations?.inputTypePlaceholder ?? '')"
+              [attr.aria-label]="getLabel(attr.displayName)"
+              [title]="getLabel(attr.displayName)"
+              (input)="onFieldInput(attr.name, $any($event.target).value)"
+              (blur)="onFieldBlur(attr.name)"
+            ></textarea>
+            @if (attr.annotations?.inputHelperTextBefore) {
+              <mat-hint align="start">{{ getLabel(attr.annotations.inputHelperTextBefore) }}</mat-hint>
+            }
+            @for (error of getErrorsForField(errors, undefined); track error) {
+              <mat-error [innerHTML]="error.errorMessage"></mat-error>
+            }
+          </mat-form-field>
+        } @else if (type === 'select' || type === 'multiselect') {
+          <mat-form-field
+            appearance="outline"
+            class="kc-profile-field"
+          >
+            <mat-label
+              >{{ getLabel(attr.displayName) }}
+              @if (attr.required) {
+                *
+              }
+            </mat-label>
+            <mat-select
+              [id]="attr.name"
+              [name]="attr.name"
+              [value]="values"
+              [multiple]="type === 'multiselect'"
+              [disabled]="attr.readOnly"
+              (selectionChange)="onSelectChange(attr.name, $event.value)"
+              (blur)="onFieldBlur(attr.name)"
+            >
+              @if (type !== 'multiselect') {
+                <mat-option value=""></mat-option>
+              }
+              @for (option of options; track option) {
+                <mat-option [value]="option">{{ getLabel(attr.name + '.' + option) || option }}</mat-option>
+              }
+            </mat-select>
+            @if (attr.annotations?.inputHelperTextBefore) {
+              <mat-hint align="start">{{ getLabel(attr.annotations.inputHelperTextBefore) }}</mat-hint>
+            }
+            @for (error of getErrorsForField(errors, undefined); track error) {
+              <mat-error [innerHTML]="error.errorMessage"></mat-error>
+            }
+          </mat-form-field>
+        } @else if (type === 'select-radiobuttons') {
+          <div class="kc-profile-radios">
+            <label class="kc-profile-label"
+              >{{ getLabel(attr.displayName) }}
+              @if (attr.required) {
+                *
+              }
+            </label>
+            <mat-radio-group
+              [name]="attr.name"
+              [value]="values"
+              (change)="onSelectChange(attr.name, $event.value)"
+            >
+              @for (option of options; track option) {
+                <mat-radio-button [value]="option">{{ getLabel(attr.name + '.' + option) || option }}</mat-radio-button>
+              }
+            </mat-radio-group>
+            @for (error of getErrorsForField(errors, undefined); track error) {
+              <mat-error [innerHTML]="error.errorMessage"></mat-error>
+            }
+          </div>
+        } @else if (type === 'multiselect-checkboxes') {
+          <div class="kc-profile-checkboxes">
+            <label class="kc-profile-label"
+              >{{ getLabel(attr.displayName) }}
+              @if (attr.required) {
+                *
+              }
+            </label>
+            @for (option of options; track option) {
+              <mat-checkbox
+                [name]="attr.name"
+                [value]="option"
+                [checked]="($any(values) || []).includes(option)"
+                (change)="onCheckboxChange(attr.name, $event.checked)"
+              >
+                {{ getLabel(attr.name + '.' + option) || option }}
+              </mat-checkbox>
+            }
+            @for (error of getErrorsForField(errors, undefined); track error) {
+              <mat-error [innerHTML]="error.errorMessage"></mat-error>
+            }
+          </div>
+        } @else {
+          <!-- Default: text input (may be multi-valued) -->
+          @if (multivalued) {
+            <!-- Multi-valued text field -->
+            @let valueArray = $any(values);
+            @for (val of valueArray; track val; let i = $index) {
+              <mat-form-field
+                appearance="outline"
+                class="kc-profile-field"
+              >
+                @if (i === 0) {
+                  <mat-label
+                    >{{ getLabel(attr.displayName) }}
+                    @if (attr.required) {
+                      *
+                    }
+                  </mat-label>
+                }
+                <input
+                  matInput
+                  [id]="attr.name + '-' + i"
+                  [name]="attr.name"
+                  [value]="val"
+                  [type]="getInputType(attr)"
+                  [readonly]="attr.readOnly"
+                  [autocomplete]="attr.autocomplete"
+                  [placeholder]="getLabel(attr.annotations?.inputTypePlaceholder ?? '')"
+                  [attr.aria-label]="getLabel(attr.displayName)"
+                  (input)="onMultiValueFieldUpdate(attr.name, valueArray, i, $any($event.target).value)"
+                  (blur)="onFieldBlur(attr.name)"
+                />
+                @if (getButtonToDisplay({ attribute: attr, values: valueArray, fieldIndex: i }).hasRemove) {
+                  <button
+                    mat-icon-button
+                    matSuffix
+                    type="button"
+                    (click)="onRemoveValue(attr.name, valueArray, i)"
+                    [attr.aria-label]="'Remove'"
+                  >
+                    <mat-icon>remove_circle_outline</mat-icon>
+                  </button>
+                }
+                @if (attr.annotations?.inputHelperTextBefore) {
+                  <mat-hint align="start">{{ getLabel(attr.annotations.inputHelperTextBefore) }}</mat-hint>
+                }
+              </mat-form-field>
+              @for (error of getErrorsForField(errors, i); track error) {
+                <mat-error [innerHTML]="error.errorMessage"></mat-error>
+              }
+            }
+            @if (
+              getButtonToDisplay({ attribute: attr, values: valueArray, fieldIndex: valueArray.length - 1 }).hasAdd
+            ) {
+              <button
+                mat-stroked-button
+                type="button"
+                class="kc-profile-add-btn"
+                (click)="onAddValue(attr.name, valueArray)"
+              >
+                <mat-icon>add</mat-icon>
+                {{ getLabel(attr.annotations?.inputTypePlaceholder ?? attr.name) }}
+              </button>
+            }
+          } @else {
+            <!-- Single text / password input -->
+            <mat-form-field
+              appearance="outline"
+              class="kc-profile-field"
+            >
+              <mat-label
+                >{{ getLabel(attr.displayName) }}
+                @if (attr.required) {
+                  *
+                }
+              </mat-label>
+              @if (isPassword(attr)) {
+                <input
+                  matInput
+                  [id]="attr.name"
+                  [name]="attr.name"
+                  [value]="values"
+                  [type]="isPasswordVisible(attr.name) ? 'text' : 'password'"
+                  [readonly]="attr.readOnly"
+                  [autocomplete]="attr.autocomplete"
+                  [placeholder]="getLabel(attr.annotations?.inputTypePlaceholder ?? '')"
+                  [attr.aria-label]="getLabel(attr.displayName)"
+                  (input)="onFieldInput(attr.name, $any($event.target).value)"
+                  (blur)="onFieldBlur(attr.name)"
+                />
+                <button
+                  mat-icon-button
+                  matSuffix
+                  type="button"
+                  (click)="togglePasswordVisibility(attr.name)"
+                  [attr.aria-label]="'Toggle password visibility'"
+                >
+                  <mat-icon>{{ isPasswordVisible(attr.name) ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              } @else {
+                <input
+                  matInput
+                  [id]="attr.name"
+                  [name]="attr.name"
+                  [value]="values"
+                  [type]="getInputType(attr)"
+                  [readonly]="attr.readOnly"
+                  [autocomplete]="attr.autocomplete"
+                  [placeholder]="getLabel(attr.annotations?.inputTypePlaceholder ?? '')"
+                  [attr.pattern]="attr.annotations?.inputTypePattern"
+                  [attr.aria-label]="getLabel(attr.displayName)"
+                  (input)="onFieldInput(attr.name, $any($event.target).value)"
+                  (blur)="onFieldBlur(attr.name)"
+                />
+              }
+              @if (attr.annotations?.inputHelperTextBefore) {
+                <mat-hint align="start">{{ getLabel(attr.annotations.inputHelperTextBefore) }}</mat-hint>
+              }
+              @for (error of getErrorsForField(errors, undefined); track error) {
+                <mat-error [innerHTML]="error.errorMessage"></mat-error>
+              }
+            </mat-form-field>
+          }
+        }
+      </div>
+    }
+  }
+}
