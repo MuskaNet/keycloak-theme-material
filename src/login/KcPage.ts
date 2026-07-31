@@ -46,6 +46,16 @@ export async function getKcPage(pageId: KcContext['pageId']): Promise<KcPage> {
         doUseDefaultCss,
         classes,
       };
+    case 'delete-credential.ftl':
+      return {
+        PageComponent: (await import('./pages/delete-credential/delete-credential.component'))
+          .DeleteCredentialComponent,
+        TemplateComponent,
+        UserProfileFormFieldsComponent,
+        doMakeUserConfirmPassword,
+        doUseDefaultCss,
+        classes,
+      };
     case 'login-reset-password.ftl':
       return {
         PageComponent: (await import('./pages/login-reset-password/login-reset-password.component'))

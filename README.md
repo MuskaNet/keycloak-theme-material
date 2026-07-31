@@ -17,7 +17,7 @@ A Google Account-style authentication theme for Keycloak, built with **Angular 2
 - **Custom component pages** covering the full authentication journey:
 
 | Page | Keycloak Template |
-|---|---|
+| --- | --- |
 | Login + Password | `login.ftl` |
 | Username-only login | `login-username.ftl` |
 | Password-only login | `login-password.ftl` |
@@ -27,6 +27,7 @@ A Google Account-style authentication theme for Keycloak, built with **Angular 2
 | OTP Login | `login-otp.ftl` |
 | Configure TOTP (stepped) | `login-config-totp.ftl` |
 | Passkey Registration | `webauthn-register.ftl` |
+| Delete Credential | `delete-credential.ftl` |
 | Info / Error / Terms | `info.ftl`, `error.ftl`, `terms.ftl` |
 
 - **Passkey (WebAuthn) support** — Conditional UI on login, full credential registration flow
