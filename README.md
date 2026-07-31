@@ -65,4 +65,3 @@ Requires [Maven](https://maven.apache.org/) for `build-keycloak-theme`.
 - **Vite 8** — build tooling
 - **Storybook 8** — component development
 - **pnpm** — package manager
-```
