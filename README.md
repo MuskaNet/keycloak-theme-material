@@ -1,51 +1,68 @@
 <p align="center">
-    <i>🚀 <a href="https://keycloakify.dev">Angular + Vite Keycloakify</a> v11 starter 🚀</i>
-    <br/>
-    <br/>
+  <i>🎨 Google Material 3 Keycloak Authentication Theme</i>
+  <br/>
+  <br/>
 </p>
 
-This starter is based on Vite and Angular. There is also [a native esbuild Angular starter](https://github.com/keycloakify/keycloakify-starter-angular).
+# Keycloak Material Theme
 
-# Quick start
+A Google Account-style authentication theme for Keycloak, built with **Angular 21**, **Angular Material 3 (M3)**, and **Keycloakify 11**. Designed to replace Keycloak's default login, registration, and account management pages with a modern, responsive Material Design experience.
+
+> This project was primarily generated and refined with the assistance of **GitHub Copilot (AI)**. Most pages, styles, and interactions were implemented through AI-guided development in VS Code.
+
+## Features
+
+- **Material Design 3** with rose/pink primary palette, light/dark theme support
+- **Responsive split-column card layout** — brand column left, content right, full-width stack on mobile
+- **Custom component pages** covering the full authentication journey:
+
+| Page | Keycloak Template |
+|---|---|
+| Login + Password | `login.ftl` |
+| Username-only login | `login-username.ftl` |
+| Password-only login | `login-password.ftl` |
+| Registration (multi-step) | `register.ftl` |
+| Reset Password | `login-reset-password.ftl` |
+| Update Password | `login-update-password.ftl` |
+| OTP Login | `login-otp.ftl` |
+| Configure TOTP (stepped) | `login-config-totp.ftl` |
+| Passkey Registration | `webauthn-register.ftl` |
+| Info / Error / Terms | `info.ftl`, `error.ftl`, `terms.ftl` |
+
+- **Passkey (WebAuthn) support** — Conditional UI on login, full credential registration flow
+- **Font Awesome** social provider branding + **Material Icons** for actions
+- **Global Material-themed scrollbar**
+- **i18n-aware** — uses Keycloak's built-in message bundles
+
+## Quick Start
 
 ```bash
-git clone https://github.com/keycloakify/keycloakify-starter-angular-vite
-cd keycloakify-starter-angular-vite
-yarn install # Or use an other package manager, just be sure to delete the yarn.lock if you use another package manager.
+pnpm install
 ```
 
-# Testing the theme locally
-
-[Documentation](https://docs.keycloakify.dev/testing-your-theme)
-
-# How to customize the theme
-
-[Documentation](https://docs.keycloakify.dev/customization-strategies)
-
-# Building the theme
-
-You need to have [Maven](https://maven.apache.org/) installed to build the theme (Maven >= 3.1.1, Java >= 7).  
-The `mvn` command must be in the $PATH.
-
-- On macOS: `brew install maven`
-- On Debian/Ubuntu: `sudo apt-get install maven`
-- On Windows: `choco install openjdk` and `choco install maven` (Or download from [here](https://maven.apache.org/download.cgi))
+## Development
 
 ```bash
-npm run build-keycloak-theme
+pnpm start          # Dev server
+pnpm storybook      # Component stories
 ```
 
-Note that by default Keycloakify generates multiple .jar files for different versions of Keycloak.  
-You can customize this behavior, see documentation [here](https://docs.keycloakify.dev/features/compiler-options/keycloakversiontargets).
-
-# Initializing the account theme
+## Lint & Build
 
 ```bash
-npx keycloakify initialize-account-theme
+pnpm lint                        # ESLint
+pnpm build                       # Production build
+pnpm build-keycloak-theme        # Build Keycloak theme .jar
 ```
 
-# Initializing the email theme
+Requires [Maven](https://maven.apache.org/) for `build-keycloak-theme`.
 
-```bash
-npx keycloakify initialize-email-theme
+## Tech Stack
+
+- **Angular 21** — standalone components, signals, `@for` / `@if` control flow
+- **Angular Material 3** — `mat-form-field`, mat-theme tokens
+- **Keycloakify 11** — Keycloak theme packaging
+- **Vite 8** — build tooling
+- **Storybook 8** — component development
+- **pnpm** — package manager
 ```
