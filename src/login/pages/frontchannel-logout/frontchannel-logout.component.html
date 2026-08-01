@@ -16,6 +16,7 @@
           <iframe
             [src]="sanitizeUrl(client.frontChannelLogoutUrl)"
             class="kc-hidden-frame"
+            title="frontchannel-logout"
             (load)="onIframeLoad()"
           ></iframe>
         }

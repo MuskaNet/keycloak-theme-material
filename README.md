@@ -17,46 +17,46 @@ A Google Account-style authentication theme for Keycloak, built with **Angular 2
 - **Zoneless change detection** — Angular 21's zoneless mode for better performance
 - **38 custom component pages** covering the full authentication journey:
 
-| Page                          | Keycloak Template                      |
-| ----------------------------- | -------------------------------------- |
-| Code                          | `code.ftl`                             |
-| Delete Account Confirm        | `delete-account-confirm.ftl`           |
-| Delete Credential             | `delete-credential.ftl`                |
-| Error                         | `error.ftl`                            |
-| Frontchannel Logout           | `frontchannel-logout.ftl`              |
-| IDP Review User Profile       | `idp-review-user-profile.ftl`          |
-| Info                          | `info.ftl`                             |
-| Link IDP Action               | `link-idp-action.ftl`                  |
-| Login                         | `login.ftl`                            |
-| Login Config TOTP             | `login-config-totp.ftl`                |
-| Login IDP Link Confirm        | `login-idp-link-confirm.ftl`           |
-| Login IDP Link Confirm Override | `login-idp-link-confirm-override.ftl` |
-| Login IDP Link Email          | `login-idp-link-email.ftl`             |
-| Login OAuth Grant             | `login-oauth-grant.ftl`                |
-| Login OAuth2 Device Verify    | `login-oauth2-device-verify-user-code.ftl` |
-| Login OTP                     | `login-otp.ftl`                        |
-| Login Page Expired            | `login-page-expired.ftl`               |
-| Login Passkeys Conditional    | `login-passkeys-conditional-authenticate.ftl` |
-| Login Password                | `login-password.ftl`                   |
-| Login Recovery Authn Code Config | `login-recovery-authn-code-config.ftl` |
-| Login Recovery Authn Code Input | `login-recovery-authn-code-input.ftl` |
-| Login Reset OTP               | `login-reset-otp.ftl`                  |
-| Login Reset Password          | `login-reset-password.ftl`             |
-| Login Update Password         | `login-update-password.ftl`            |
-| Login Update Profile          | `login-update-profile.ftl`             |
-| Login Username                | `login-username.ftl`                   |
-| Login Verify Email            | `login-verify-email.ftl`               |
-| Login X509 Info               | `login-x509-info.ftl`                  |
-| Logout Confirm                | `logout-confirm.ftl`                   |
-| Registration                  | `register.ftl`                         |
-| SAML Post Form                | `saml-post-form.ftl`                   |
-| Select Authenticator          | `select-authenticator.ftl`             |
-| Select Organization           | `select-organization.ftl`              |
-| Terms                         | `terms.ftl`                            |
-| Update Email                  | `update-email.ftl`                     |
-| WebAuthn Authenticate         | `webauthn-authenticate.ftl`            |
-| WebAuthn Error                | `webauthn-error.ftl`                   |
-| WebAuthn Register             | `webauthn-register.ftl`                |
+| Page                             | Keycloak Template                             |
+| -------------------------------- | --------------------------------------------- |
+| Code                             | `code.ftl`                                    |
+| Delete Account Confirm           | `delete-account-confirm.ftl`                  |
+| Delete Credential                | `delete-credential.ftl`                       |
+| Error                            | `error.ftl`                                   |
+| Frontchannel Logout              | `frontchannel-logout.ftl`                     |
+| IDP Review User Profile          | `idp-review-user-profile.ftl`                 |
+| Info                             | `info.ftl`                                    |
+| Link IDP Action                  | `link-idp-action.ftl`                         |
+| Login                            | `login.ftl`                                   |
+| Login Config TOTP                | `login-config-totp.ftl`                       |
+| Login IDP Link Confirm           | `login-idp-link-confirm.ftl`                  |
+| Login IDP Link Confirm Override  | `login-idp-link-confirm-override.ftl`         |
+| Login IDP Link Email             | `login-idp-link-email.ftl`                    |
+| Login OAuth Grant                | `login-oauth-grant.ftl`                       |
+| Login OAuth2 Device Verify       | `login-oauth2-device-verify-user-code.ftl`    |
+| Login OTP                        | `login-otp.ftl`                               |
+| Login Page Expired               | `login-page-expired.ftl`                      |
+| Login Passkeys Conditional       | `login-passkeys-conditional-authenticate.ftl` |
+| Login Password                   | `login-password.ftl`                          |
+| Login Recovery Authn Code Config | `login-recovery-authn-code-config.ftl`        |
+| Login Recovery Authn Code Input  | `login-recovery-authn-code-input.ftl`         |
+| Login Reset OTP                  | `login-reset-otp.ftl`                         |
+| Login Reset Password             | `login-reset-password.ftl`                    |
+| Login Update Password            | `login-update-password.ftl`                   |
+| Login Update Profile             | `login-update-profile.ftl`                    |
+| Login Username                   | `login-username.ftl`                          |
+| Login Verify Email               | `login-verify-email.ftl`                      |
+| Login X509 Info                  | `login-x509-info.ftl`                         |
+| Logout Confirm                   | `logout-confirm.ftl`                          |
+| Registration                     | `register.ftl`                                |
+| SAML Post Form                   | `saml-post-form.ftl`                          |
+| Select Authenticator             | `select-authenticator.ftl`                    |
+| Select Organization              | `select-organization.ftl`                     |
+| Terms                            | `terms.ftl`                                   |
+| Update Email                     | `update-email.ftl`                            |
+| WebAuthn Authenticate            | `webauthn-authenticate.ftl`                   |
+| WebAuthn Error                   | `webauthn-error.ftl`                          |
+| WebAuthn Register                | `webauthn-register.ftl`                       |
 
 - **Passkey (WebAuthn) support** — Conditional UI on login, full credential registration flow
 - **Font Awesome** social provider branding + **Material Icons** for actions
