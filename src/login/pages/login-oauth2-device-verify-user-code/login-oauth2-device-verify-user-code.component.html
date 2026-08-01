@@ -1,0 +1,44 @@
+@let url = kcContext.url;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('oauth2DeviceVerificationTitle') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <form
+      id="kc-user-verify-device-user-code-form"
+      method="post"
+      [action]="url.oauth2DeviceVerificationAction"
+    >
+      <div class="kc-form-content">
+        <mat-form-field
+          appearance="outline"
+          class="kc-field"
+        >
+          <mat-label>{{ i18n.msgStr('verifyOAuth2DeviceUserCode') }}</mat-label>
+          <input
+            matInput
+            id="device-user-code"
+            name="device_user_code"
+            type="text"
+            autocomplete="off"
+            autofocus
+          />
+        </mat-form-field>
+      </div>
+      <div class="kc-form-submit">
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+        >
+          {{ i18n.msgStr('doSubmit') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

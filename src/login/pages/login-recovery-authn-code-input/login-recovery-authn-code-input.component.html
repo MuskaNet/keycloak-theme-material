@@ -1,0 +1,51 @@
+@let url = kcContext.url;
+@let recoveryAuthnCodesInputBean = $any(kcContext).recoveryAuthnCodesInputBean;
+@let messagesPerField = kcContext.messagesPerField;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('auth-recovery-code-header') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <form
+      method="post"
+      [action]="url.loginAction"
+    >
+      <div class="kc-form-content">
+        <mat-form-field
+          appearance="outline"
+          class="kc-field"
+        >
+          <mat-label>{{
+            i18n.msgStr('auth-recovery-code-prompt', (recoveryAuthnCodesInputBean?.codeNumber ?? '').toString())
+          }}</mat-label>
+          <input
+            matInput
+            id="recoveryCodeInput"
+            name="recoveryCodeInput"
+            type="text"
+            autocomplete="off"
+            autofocus
+            [attr.aria-invalid]="messagesPerField.existsError('recoveryCodeInput')"
+          />
+          @if (messagesPerField.existsError('recoveryCodeInput')) {
+            <mat-error [innerHTML]="messagesPerField.get('recoveryCodeInput')"></mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="kc-form-submit">
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+        >
+          {{ i18n.msgStr('doLogIn') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

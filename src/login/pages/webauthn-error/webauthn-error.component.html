@@ -1,0 +1,31 @@
+@let url = kcContext.url;
+@let message = kcContext.message;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr($any('webauthn-error-title')) }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <div class="kc-page-form-layout">
+      <div class="kc-form-content">
+        <p
+          class="kc-instruction"
+          [innerHTML]="message?.summary ?? '' | kcSanitize: 'html'"
+        ></p>
+      </div>
+      <div class="kc-form-submit">
+        <a
+          mat-flat-button
+          color="primary"
+          [href]="url.loginAction"
+        >
+          {{ i18n.msgStr('doTryAgain') }}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

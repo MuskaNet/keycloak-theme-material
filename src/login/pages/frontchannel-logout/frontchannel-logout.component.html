@@ -1,0 +1,25 @@
+@let logout = kcContext.logout;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('frontchannel-logout.title') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <div class="kc-page-form-layout">
+      <div class="kc-form-content">
+        <p class="kc-instruction">{{ i18n.msgStr('frontchannel-logout.message') }}</p>
+        @for (client of logout.clients; track client.name) {
+          <iframe
+            [src]="sanitizeUrl(client.frontChannelLogoutUrl)"
+            class="kc-hidden-frame"
+            (load)="onIframeLoad()"
+          ></iframe>
+        }
+      </div>
+    </div>
+  </div>
+</div>

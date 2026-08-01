@@ -1,0 +1,32 @@
+@let url = kcContext.url;
+@let organizations = $any(kcContext).organizations;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('organization.select') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <form
+      method="post"
+      [action]="url.loginAction"
+    >
+      <div class="kc-form-content kc-totp-content">
+        @for (org of organizations?.list ?? []; track org.id) {
+          <button
+            mat-stroked-button
+            type="submit"
+            name="organization_id"
+            [value]="org.id"
+            class="kc-org-btn"
+          >
+            {{ org.name }}
+          </button>
+        }
+      </div>
+    </form>
+  </div>
+</div>

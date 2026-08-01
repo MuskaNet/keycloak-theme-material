@@ -1,0 +1,61 @@
+@let url = kcContext.url;
+@let messagesPerField = kcContext.messagesPerField;
+@let email = $any(kcContext).email ?? {};
+@let isAppInitiatedAction = kcContext.isAppInitiatedAction;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('updateEmailTitle') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <form
+      method="post"
+      [action]="url.loginAction"
+    >
+      <div class="kc-form-content">
+        <mat-form-field
+          appearance="outline"
+          class="kc-field"
+        >
+          <mat-label>{{ i18n.msgStr('email') }}</mat-label>
+          <input
+            matInput
+            id="email"
+            name="email"
+            type="email"
+            autofocus
+            [value]="email.value ?? ''"
+            [attr.aria-invalid]="messagesPerField.existsError('email')"
+          />
+          @if (messagesPerField.existsError('email')) {
+            <mat-error [innerHTML]="messagesPerField.get('email')"></mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="kc-form-submit">
+        @if (isAppInitiatedAction) {
+          <button
+            mat-stroked-button
+            type="submit"
+            name="cancel-aia"
+            value="true"
+            formNoValidate
+          >
+            {{ i18n.msgStr('doCancel') }}
+          </button>
+        }
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+        >
+          {{ i18n.msgStr('doSubmit') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

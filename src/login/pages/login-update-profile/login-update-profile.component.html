@@ -1,0 +1,49 @@
+@let url = kcContext.url;
+@let isAppInitiatedAction = kcContext.isAppInitiatedAction;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('loginProfileTitle') }}
+</ng-template>
+
+<div class="kc-login-card">
+  <div class="kc-login-brand">
+    <h1 class="kc-login-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-login-form">
+    <form
+      id="kc-update-profile-form"
+      method="post"
+      [action]="url.loginAction"
+    >
+      <div class="kc-form-content">
+        <ng-container [ngComponentOutlet]="userProfileFormFields() ?? null" />
+      </div>
+      <div class="kc-form-submit">
+        <input
+          type="submit"
+          [disabled]="!isFormSubmittable()"
+          hidden
+        />
+        @if (isAppInitiatedAction) {
+          <button
+            mat-stroked-button
+            type="submit"
+            name="cancel-aia"
+            value="true"
+            formNoValidate
+          >
+            {{ i18n.msgStr('doCancel') }}
+          </button>
+        }
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          [disabled]="!isFormSubmittable()"
+        >
+          {{ i18n.msgStr('doSubmit') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

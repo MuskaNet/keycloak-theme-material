@@ -1,0 +1,47 @@
+@let url = kcContext.url;
+@let triggeredFromAia = $any(kcContext).triggered_from_aia;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('deleteAccountConfirm') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <form
+      method="post"
+      [action]="url.loginAction"
+    >
+      <div class="kc-form-content kc-totp-content">
+        <p class="kc-instruction">{{ i18n.msgStr('irreversibleAction') }}</p>
+        <p class="kc-instruction">{{ i18n.msgStr('deletingImplies') }}</p>
+        <ul>
+          <li>{{ i18n.msgStr('loggingOutImmediately') }}</li>
+          <li>{{ i18n.msgStr('errasingData') }}</li>
+        </ul>
+        <p class="kc-instruction">{{ i18n.msgStr('finalDeletionConfirmation') }}</p>
+      </div>
+      <div class="kc-form-submit">
+        @if (triggeredFromAia) {
+          <button
+            mat-stroked-button
+            type="submit"
+            name="cancel-aia"
+            value="true"
+          >
+            {{ i18n.msgStr('doCancel') }}
+          </button>
+        }
+        <button
+          mat-flat-button
+          color="warn"
+          type="submit"
+        >
+          {{ i18n.msgStr('doConfirmDelete') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

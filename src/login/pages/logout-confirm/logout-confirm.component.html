@@ -1,0 +1,47 @@
+@let url = kcContext.url;
+@let logoutConfirm = kcContext.logoutConfirm;
+@let client = kcContext.client;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('logoutConfirmTitle') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <div class="kc-page-form-layout">
+      <div class="kc-form-content">
+        <p class="kc-instruction">{{ i18n.msgStr('logoutConfirmHeader') }}</p>
+      </div>
+      <div class="kc-form-submit">
+        <form
+          class="kc-form-contents"
+          method="POST"
+          [action]="url.logoutConfirmAction"
+        >
+          <input
+            type="hidden"
+            name="session_code"
+            [value]="logoutConfirm.code"
+          />
+          <a
+            mat-stroked-button
+            [href]="client.baseUrl"
+          >
+            {{ i18n.msgStr('doCancel') }}
+          </a>
+          <button
+            mat-flat-button
+            color="warn"
+            name="confirmLogout"
+            type="submit"
+          >
+            {{ i18n.msgStr('doLogout') }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

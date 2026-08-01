@@ -1,0 +1,33 @@
+@let url = kcContext.url;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('pageExpiredTitle') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <div class="kc-page-form-layout">
+      <div class="kc-form-content">
+        <p class="kc-instruction">
+          {{ i18n.msgStr('pageExpiredMsg1') }}
+          <a
+            class="kc-link"
+            [href]="url.loginRestartFlowUrl"
+            >{{ i18n.msgStr('doClickHere') }}</a
+          >.
+        </p>
+        <p class="kc-instruction">
+          {{ i18n.msgStr('pageExpiredMsg2') }}
+          <a
+            class="kc-link"
+            [href]="url.loginAction"
+            >{{ i18n.msgStr('doClickHere') }}</a
+          >.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

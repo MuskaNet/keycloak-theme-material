@@ -1,0 +1,94 @@
+@let client = kcContext.client;
+@let oauth = kcContext.oauth;
+@let url = kcContext.url;
+@let realm = kcContext.realm;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('oauthGrantTitle', client.name ? i18n.advancedMsgStr(client.name) : client.clientId) }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <div
+      class="kc-page-logo"
+      [innerHTML]="realm.displayNameHtml | kcSanitize: 'html'"
+    ></div>
+    @if (client.attributes['logoUri']) {
+      <img
+        alt=""
+        [src]="client.attributes['logoUri']"
+        class="kc-page-logo"
+      />
+    }
+    <h1 class="kc-page-title">{{ client.name ? i18n.advancedMsgStr(client.name) : client.clientId }}</h1>
+  </div>
+  <div class="kc-page-form">
+    <div class="kc-page-form-layout">
+      <div class="kc-form-content kc-totp-content">
+        <p class="kc-instruction">{{ i18n.msgStr('oauthGrantRequest') }}</p>
+        <ul>
+          @for (clientScope of oauth.clientScopesRequested; track clientScope) {
+            <li>
+              {{ i18n.advancedMsgStr(clientScope.consentScreenText) }}
+              @if (clientScope.dynamicScopeParameter) {
+                : <b>{{ clientScope.dynamicScopeParameter }}</b>
+              }
+            </li>
+          }
+        </ul>
+        @if (client.attributes['policyUri'] || client.attributes['tosUri']) {
+          <p class="kc-instruction">
+            @if (client.attributes['policyUri']) {
+              <a
+                class="kc-link"
+                target="_blank"
+                [href]="client.attributes['policyUri']"
+              >
+                {{ i18n.msgStr('oauthGrantPolicy') }}
+              </a>
+            }
+            @if (client.attributes['tosUri']) {
+              <a
+                class="kc-link"
+                target="_blank"
+                [href]="client.attributes['tosUri']"
+              >
+                {{ i18n.msgStr('oauthGrantTos') }}
+              </a>
+            }
+          </p>
+        }
+      </div>
+      <div class="kc-form-submit">
+        <form
+          method="post"
+          [action]="url.oauthAction"
+          class="kc-form-contents"
+        >
+          <input
+            type="hidden"
+            name="code"
+            [value]="oauth.code"
+          />
+          <button
+            mat-stroked-button
+            type="submit"
+            name="cancel"
+            value="cancel"
+          >
+            {{ i18n.msgStr('doNo') }}
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            name="accept"
+            value="accept"
+          >
+            {{ i18n.msgStr('doYes') }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

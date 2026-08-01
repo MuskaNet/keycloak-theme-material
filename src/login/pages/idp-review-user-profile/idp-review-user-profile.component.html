@@ -1,0 +1,84 @@
+@let url = kcContext.url;
+@let isAppInitiatedAction = kcContext.isAppInitiatedAction;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('loginIdpReviewProfileTitle') }}
+</ng-template>
+
+<div class="kc-login-card kc-register-card">
+  <div class="kc-login-brand">
+    <div
+      class="kc-login-logo"
+      [innerHTML]="kcContext.realm.displayNameHtml | kcSanitize: 'html'"
+    ></div>
+    <h1 class="kc-login-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+
+    @if (hasMultipleSteps) {
+      <div class="kc-register-progress">
+        @for (step of registrationSteps(); track $index) {
+          <span [class.kc-register-progress-active]="$index === registrationStep()">{{ $index + 1 }}</span>
+        }
+      </div>
+    }
+  </div>
+  <div class="kc-login-form">
+    <form
+      id="kc-idp-review-user-profile-form"
+      method="post"
+      [action]="url.loginAction"
+      class="kc-register-form"
+    >
+      <div class="kc-register-content">
+        <ng-container
+          [ngComponentOutlet]="userProfileFormFields() ?? null"
+          [ngComponentOutletInputs]="{ visibleFieldNames: visibleFieldNames() }"
+        />
+      </div>
+      <div class="kc-register-actions">
+        @if (registrationStep() > 0) {
+          <button
+            mat-stroked-button
+            type="button"
+            class="kc-register-back"
+            (click)="previousStep()"
+          >
+            {{ i18n.msgStr('doBack') }}
+          </button>
+        }
+
+        @if (!isLastStep) {
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            class="kc-register-submit"
+            (click)="nextStep()"
+          >
+            {{ i18n.msgStr('doContinue') }}
+          </button>
+        } @else {
+          @if (isAppInitiatedAction) {
+            <button
+              mat-stroked-button
+              type="submit"
+              name="cancel-aia"
+              value="true"
+              formNoValidate
+            >
+              {{ i18n.msgStr('doCancel') }}
+            </button>
+          }
+          <button
+            mat-flat-button
+            color="primary"
+            class="kc-register-submit"
+            type="submit"
+            [disabled]="!isFormSubmittable()"
+          >
+            {{ i18n.msgStr('doSubmit') }}
+          </button>
+        }
+      </div>
+    </form>
+  </div>
+</div>

@@ -16,19 +16,19 @@ A Google Account-style authentication theme for Keycloak, built with **Angular 2
 - **Responsive split-column card layout** — brand column left, content right, full-width stack on mobile
 - **Custom component pages** covering the full authentication journey:
 
-| Page | Keycloak Template |
-| --- | --- |
-| Login + Password | `login.ftl` |
-| Username-only login | `login-username.ftl` |
-| Password-only login | `login-password.ftl` |
-| Registration (multi-step) | `register.ftl` |
-| Reset Password | `login-reset-password.ftl` |
-| Update Password | `login-update-password.ftl` |
-| OTP Login | `login-otp.ftl` |
-| Configure TOTP (stepped) | `login-config-totp.ftl` |
-| Passkey Registration | `webauthn-register.ftl` |
-| Delete Credential | `delete-credential.ftl` |
-| Info / Error / Terms | `info.ftl`, `error.ftl`, `terms.ftl` |
+| Page                      | Keycloak Template                    |
+| ------------------------- | ------------------------------------ |
+| Login + Password          | `login.ftl`                          |
+| Username-only login       | `login-username.ftl`                 |
+| Password-only login       | `login-password.ftl`                 |
+| Registration (multi-step) | `register.ftl`                       |
+| Reset Password            | `login-reset-password.ftl`           |
+| Update Password           | `login-update-password.ftl`          |
+| OTP Login                 | `login-otp.ftl`                      |
+| Configure TOTP (stepped)  | `login-config-totp.ftl`              |
+| Passkey Registration      | `webauthn-register.ftl`              |
+| Delete Credential         | `delete-credential.ftl`              |
+| Info / Error / Terms      | `info.ftl`, `error.ftl`, `terms.ftl` |
 
 - **Passkey (WebAuthn) support** — Conditional UI on login, full credential registration flow
 - **Font Awesome** social provider branding + **Material Icons** for actions

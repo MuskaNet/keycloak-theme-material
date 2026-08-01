@@ -11,8 +11,16 @@ $theme-config: (
     tertiary: mat.$blue-palette,
   ),
   typography: (
-    plain-family: (Roboto, 'Helvetica Neue', sans-serif),
-    brand-family: (Roboto, 'Helvetica Neue', sans-serif),
+    plain-family: (
+      Roboto,
+      'Helvetica Neue',
+      sans-serif,
+    ),
+    brand-family: (
+      Roboto,
+      'Helvetica Neue',
+      sans-serif,
+    ),
   ),
   density: (
     scale: 0,
@@ -26,8 +34,16 @@ $dark-theme-config: (
     tertiary: mat.$blue-palette,
   ),
   typography: (
-    plain-family: (Roboto, 'Helvetica Neue', sans-serif),
-    brand-family: (Roboto, 'Helvetica Neue', sans-serif),
+    plain-family: (
+      Roboto,
+      'Helvetica Neue',
+      sans-serif,
+    ),
+    brand-family: (
+      Roboto,
+      'Helvetica Neue',
+      sans-serif,
+    ),
   ),
   density: (
     scale: 0,
@@ -52,11 +68,14 @@ html {
   }
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   overflow: hidden;

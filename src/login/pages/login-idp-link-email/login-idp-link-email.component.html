@@ -1,0 +1,41 @@
+@let url = kcContext.url;
+@let idpAlias = $any(kcContext).idpAlias;
+@let brokerContext = $any(kcContext).brokerContext;
+@let realm = $any(kcContext).realm;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('emailLinkIdpTitle', idpAlias) }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <div class="kc-page-form-layout">
+      <div class="kc-form-content">
+        <p class="kc-instruction">
+          {{ i18n.msgStr('emailLinkIdp1', idpAlias, brokerContext?.username, $any(realm)?.displayName) }}
+        </p>
+        <p class="kc-instruction">
+          {{ i18n.msgStr('emailLinkIdp2') }}
+          <a
+            class="kc-link"
+            [href]="url.loginAction"
+            >{{ i18n.msgStr('doClickHere') }}</a
+          >
+          {{ i18n.msgStr('emailLinkIdp3') }}
+        </p>
+        <p class="kc-instruction">
+          {{ i18n.msgStr('emailLinkIdp4') }}
+          <a
+            class="kc-link"
+            [href]="url.loginAction"
+            >{{ i18n.msgStr('doClickHere') }}</a
+          >
+          {{ i18n.msgStr('emailLinkIdp5') }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+@let url = kcContext.url;
+@let user = kcContext.user;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('emailVerifyTitle') }}
+</ng-template>
+<ng-template #infoNode>
+  <p class="kc-instruction">
+    {{ i18n.msgStr('emailVerifyInstruction2') }}
+    <br />
+    <a
+      class="kc-link"
+      [href]="url.loginAction"
+      >{{ i18n.msgStr('doClickHere') }}</a
+    >
+    &nbsp;
+    {{ i18n.msgStr('emailVerifyInstruction3') }}
+  </p>
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <div class="kc-page-form-layout">
+      <div class="kc-form-content">
+        <p class="kc-instruction">
+          {{ i18n.msgStr('emailVerifyInstruction1', user?.email ?? '') }}
+        </p>
+        @if (infoNode) {
+          <ng-container [ngTemplateOutlet]="infoNode" />
+        }
+      </div>
+      <div class="kc-form-submit">
+        <a
+          mat-flat-button
+          color="primary"
+          [href]="url.loginAction"
+        >
+          {{ i18n.msgStr('doContinue') }}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

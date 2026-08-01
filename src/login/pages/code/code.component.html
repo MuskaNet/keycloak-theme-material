@@ -1,0 +1,43 @@
+@let code = kcContext.code;
+
+<ng-template #headerNode>
+  @if (code.success) {
+    {{ i18n.msgStr('codeSuccessTitle') }}
+  } @else {
+    {{ i18n.msgStr('codeErrorTitle', code.error) }}
+  }
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <div class="kc-page-form-layout">
+      <div class="kc-form-content">
+        @if (code.success) {
+          <p class="kc-instruction">{{ i18n.msgStr('copyCodeInstruction') }}</p>
+          <mat-form-field
+            appearance="outline"
+            class="kc-field"
+          >
+            <input
+              matInput
+              id="code"
+              [value]="code.code"
+              readonly
+              [title]="'Code'"
+            />
+          </mat-form-field>
+        } @else {
+          <p
+            class="kc-instruction"
+            id="error"
+          >
+            {{ code.error }}
+          </p>
+        }
+      </div>
+    </div>
+  </div>
+</div>

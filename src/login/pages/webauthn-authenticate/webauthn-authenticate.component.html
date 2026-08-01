@@ -1,0 +1,76 @@
+@let url = kcContext.url;
+@let authenticators = kcContext.authenticators;
+@let shouldDisplayAuthenticators = kcContext.shouldDisplayAuthenticators;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('webauthn-login-title') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <div class="kc-page-form-layout">
+      <div class="kc-form-content">
+        <form
+          id="webauth"
+          method="post"
+          [action]="url.loginAction"
+          class="kc-hidden-form"
+        >
+          <input
+            type="hidden"
+            id="clientDataJSON"
+            name="clientDataJSON"
+          />
+          <input
+            type="hidden"
+            id="authenticatorData"
+            name="authenticatorData"
+          />
+          <input
+            type="hidden"
+            id="signature"
+            name="signature"
+          />
+          <input
+            type="hidden"
+            id="credentialId"
+            name="credentialId"
+          />
+          <input
+            type="hidden"
+            id="userHandle"
+            name="userHandle"
+          />
+          <input
+            type="hidden"
+            id="error"
+            name="error"
+          />
+        </form>
+
+        @if (authenticators && shouldDisplayAuthenticators) {
+          <p class="kc-instruction">{{ i18n.msgStr('webauthn-available-authenticators') }}</p>
+          @for (auth of authenticators.authenticators; track auth.credentialId) {
+            <div class="kc-auth-item">
+              <span>{{ i18n.advancedMsgStr(auth.label) }}</span>
+              <span class="kc-auth-item-date">{{ auth.createdAt }}</span>
+            </div>
+          }
+        }
+      </div>
+      <div class="kc-form-submit">
+        <button
+          mat-flat-button
+          color="primary"
+          [id]="authButtonId"
+          type="button"
+        >
+          {{ i18n.msgStr('webauthn-doAuthenticate') }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

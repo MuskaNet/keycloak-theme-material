@@ -1,0 +1,54 @@
+@let url = kcContext.url;
+@let recoveryAuthnCodesConfigBean = $any(kcContext).recoveryAuthnCodesConfigBean;
+@let isAppInitiatedAction = kcContext.isAppInitiatedAction;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('recovery-code-config-header') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <div class="kc-page-form-layout">
+      <div class="kc-form-content kc-totp-content">
+        <div class="kc-alert kc-alert-warning">
+          <div class="kc-alert-message">
+            <p>{{ i18n.msgStr('recovery-code-config-warning-message') }}</p>
+          </div>
+        </div>
+        <ol class="kc-recovery-codes-list">
+          @for (code of recoveryAuthnCodesConfigBean?.generatedRecoveryAuthnCodesList ?? []; track code) {
+            <li>{{ code.slice(0, 4) }}-{{ code.slice(4, 8) }}-{{ code.slice(8) }}</li>
+          }
+        </ol>
+      </div>
+      <div class="kc-form-submit">
+        <form
+          method="post"
+          [action]="url.loginAction"
+          class="kc-form-contents"
+        >
+          @if (isAppInitiatedAction) {
+            <button
+              mat-stroked-button
+              type="submit"
+              name="cancel-aia"
+              value="true"
+            >
+              {{ i18n.msgStr('recovery-codes-action-cancel') }}
+            </button>
+          }
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+          >
+            {{ i18n.msgStr('recovery-codes-action-complete') }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

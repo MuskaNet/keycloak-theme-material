@@ -1,0 +1,46 @@
+@let url = kcContext.url;
+@let idpAlias = kcContext.idpAlias;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('confirmLinkIdpTitle') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <div class="kc-page-form-layout">
+      <div class="kc-form-content">
+        <p class="kc-instruction">
+          {{ i18n.msgStr('confirmLinkIdpContinue', $any(idpAlias)) }}
+        </p>
+      </div>
+      <div class="kc-form-submit">
+        <form
+          method="post"
+          [action]="url.loginAction"
+          class="kc-form-contents"
+        >
+          <button
+            mat-stroked-button
+            type="submit"
+            name="submitAction"
+            value="updateProfile"
+          >
+            {{ i18n.msgStr('confirmLinkIdpReviewProfile') }}
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            name="submitAction"
+            value="linkAccount"
+          >
+            {{ i18n.msgStr('confirmLinkIdpContinue', $any(idpAlias)) }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

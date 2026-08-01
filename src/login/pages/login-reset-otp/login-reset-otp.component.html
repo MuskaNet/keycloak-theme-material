@@ -1,0 +1,49 @@
+@let url = kcContext.url;
+@let configuredOtpCredentials = kcContext.configuredOtpCredentials;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('doLogIn') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <form
+      method="post"
+      [action]="url.loginAction"
+    >
+      <div class="kc-form-content kc-totp-content">
+        <p class="kc-instruction">{{ i18n.msgStr('otp-reset-description') }}</p>
+        @if (configuredOtpCredentials.userOtpCredentials.length) {
+          @for (credential of configuredOtpCredentials.userOtpCredentials; track credential.id) {
+            <button
+              mat-stroked-button
+              type="submit"
+              name="selectedCredentialId"
+              [value]="credential.id"
+              class="kc-auth-select-btn"
+            >
+              <span class="kc-auth-select-item">
+                <span class="kc-auth-select-body">
+                  <span class="kc-auth-select-label">{{ credential.userLabel }}</span>
+                </span>
+                <mat-icon class="kc-auth-select-arrow">chevron_right</mat-icon>
+              </span>
+            </button>
+          }
+        }
+      </div>
+      <div class="kc-form-submit">
+        <button
+          mat-stroked-button
+          type="submit"
+          name="cancel"
+        >
+          {{ i18n.msgStr('doBack') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

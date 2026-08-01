@@ -1,0 +1,20 @@
+@let x509 = $any(kcContext).x509;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('doLogIn') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <div class="kc-page-form-layout">
+      <div class="kc-form-content">
+        @if (x509?.formData?.subjectDN) {
+          <p class="kc-instruction">{{ x509.formData.subjectDN }}</p>
+        }
+      </div>
+    </div>
+  </div>
+</div>

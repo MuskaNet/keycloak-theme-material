@@ -1,0 +1,48 @@
+@let url = kcContext.url;
+@let auth = kcContext.auth;
+
+<ng-template #headerNode>
+  {{ i18n.msgStr('loginChooseAuthenticator') }}
+</ng-template>
+
+<div class="kc-page-card">
+  <div class="kc-page-brand">
+    <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
+  </div>
+  <div class="kc-page-form">
+    <form
+      method="post"
+      [action]="url.loginAction"
+    >
+      <div class="kc-form-content kc-totp-content">
+        @for (selection of auth.authenticationSelections; track selection.authExecId) {
+          <button
+            mat-stroked-button
+            type="submit"
+            name="authenticationExecution"
+            [value]="selection.authExecId"
+            class="kc-auth-select-btn"
+          >
+            <span class="kc-auth-select-item">
+              <span class="kc-auth-select-body">
+                <span class="kc-auth-select-label">{{ i18n.advancedMsgStr(selection.displayName) }}</span>
+                <span class="kc-auth-select-desc">{{ i18n.advancedMsgStr(selection.helpText) }}</span>
+              </span>
+              <mat-icon class="kc-auth-select-arrow">chevron_right</mat-icon>
+            </span>
+          </button>
+        }
+      </div>
+      <div class="kc-form-submit">
+        <button
+          mat-stroked-button
+          type="submit"
+          name="cancel"
+          value="cancel"
+        >
+          {{ i18n.msgStr('doCancel') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
