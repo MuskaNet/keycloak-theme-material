@@ -59,17 +59,20 @@
   gap: 20px;
 }
 
+.kc-form-content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+
 .kc-page-form > form {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
   width: 100%;
   min-width: 0;
-  min-height: 0;
-}
-
-.kc-page-form > form > .kc-form-content {
-  flex: 1 1 auto;
   min-height: 0;
 }
 
@@ -158,10 +161,6 @@
   margin-top: 8px;
 }
 
-.kc-page-form-layout .kc-form-content {
-  flex: 1 1 auto;
-}
-
 .kc-page-form-layout .kc-form-submit {
   flex-shrink: 0;
 }
@@ -176,6 +175,7 @@
 
 .kc-totp-content {
   overflow-y: auto;
+  justify-content: flex-start;
 }
 
 .kc-totp-progress {

@@ -1,5 +1,6 @@
 .kc-register-card {
   display: flex;
+  box-sizing: border-box;
   width: 100%;
   height: min(380px, calc(100dvh - 128px));
   min-height: 0;
@@ -7,10 +8,6 @@
   border-radius: 28px;
   background-color: var(--mat-sys-surface-container-low);
   overflow: hidden;
-}
-
-.kc-register-card {
-  box-sizing: border-box;
 }
 
 .kc-register-card .kc-login-brand {
