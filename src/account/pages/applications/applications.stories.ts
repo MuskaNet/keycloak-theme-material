@@ -1,0 +1,124 @@
+import type { Meta, StoryObj } from '@storybook/angular';
+import { decorators, KcPageStory } from '../../KcPageStory';
+
+const meta: Meta<KcPageStory> = {
+  title: 'account/applications.ftl',
+  component: KcPageStory,
+  decorators: decorators,
+  globals: {
+    pageId: 'applications.ftl',
+  },
+};
+
+export default meta;
+type Story = StoryObj<KcPageStory>;
+
+export const Default: Story = {};
+
+export const WithApplications: Story = {
+  globals: {
+    kcContext: {
+      applications: {
+        applications: [
+          {
+            realmRolesAvailable: [{ name: 'offline_access', description: '' }],
+            resourceRolesAvailable: {},
+            additionalGrants: [],
+            clientScopesGranted: ['profile', 'email'],
+            effectiveUrl: 'https://example.com',
+            client: {
+              alwaysDisplayInConsole: false,
+              attributes: {},
+              authenticationFlowBindingOverrides: {},
+              bearerOnly: false,
+              clientAuthenticatorType: '',
+              consentRequired: true,
+              consentScreenText: '',
+              description: '',
+              directAccessGrantsEnabled: false,
+              displayOnConsentScreen: false,
+              dynamicScope: false,
+              enabled: true,
+              frontchannelLogout: false,
+              fullScopeAllowed: false,
+              id: '1',
+              implicitFlowEnabled: false,
+              includeInTokenScope: true,
+              managementUrl: '',
+              name: 'My App',
+              nodeReRegistrationTimeout: '',
+              notBefore: '',
+              protocol: 'openid-connect',
+              protocolMappersStream: {},
+              publicClient: true,
+              realm: {},
+              realmScopeMappingsStream: {},
+              redirectUris: [],
+              registeredNodes: {},
+              rolesStream: {},
+              scopeMappingsStream: {},
+              secret: '',
+              serviceAccountsEnabled: false,
+              standardFlowEnabled: true,
+              surrogateAuthRequired: false,
+              webOrigins: [],
+            },
+          },
+          {
+            realmRolesAvailable: [],
+            resourceRolesAvailable: {
+              'resource-server': [
+                {
+                  roleName: 'view',
+                  roleDescription: '',
+                  clientName: 'resource-server',
+                  clientId: 'resource-server',
+                },
+              ],
+            },
+            additionalGrants: ['offline_access'],
+            clientScopesGranted: [],
+            effectiveUrl: undefined,
+            client: {
+              alwaysDisplayInConsole: false,
+              attributes: {},
+              authenticationFlowBindingOverrides: {},
+              bearerOnly: false,
+              clientAuthenticatorType: '',
+              consentRequired: false,
+              consentScreenText: '',
+              description: '',
+              directAccessGrantsEnabled: false,
+              displayOnConsentScreen: false,
+              dynamicScope: false,
+              enabled: true,
+              frontchannelLogout: false,
+              fullScopeAllowed: false,
+              id: '2',
+              implicitFlowEnabled: false,
+              includeInTokenScope: true,
+              managementUrl: '',
+              name: undefined,
+              nodeReRegistrationTimeout: '',
+              notBefore: '',
+              protocol: 'openid-connect',
+              protocolMappersStream: {},
+              publicClient: false,
+              realm: {},
+              realmScopeMappingsStream: {},
+              redirectUris: [],
+              registeredNodes: {},
+              rolesStream: {},
+              scopeMappingsStream: {},
+              secret: '',
+              serviceAccountsEnabled: true,
+              standardFlowEnabled: false,
+              surrogateAuthRequired: false,
+              webOrigins: [],
+            },
+          },
+        ],
+      },
+    },
+  },
+};

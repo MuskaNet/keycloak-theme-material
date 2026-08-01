@@ -1,0 +1,146 @@
+@let url = kcContext.url;
+@let stateChecker = kcContext.stateChecker;
+@let applications = kcContext.applications?.applications ?? [];
+
+<div class="kc-page">
+  <div class="kc-page-header">
+    <h2 class="kc-page-title">{{ i18n.msgStr('applicationsHtmlTitle') }}</h2>
+  </div>
+
+  @if (applications.length === 0) {
+    <div class="kc-page-card">
+      <div class="kc-empty-state">
+        <mat-icon>apps</mat-icon>
+        <span class="kc-empty-title">{{ i18n.msgStr('noApplications') }}</span>
+      </div>
+    </div>
+  } @else {
+    <form
+      method="post"
+      [action]="url.applicationsUrl"
+    >
+      <input
+        type="hidden"
+        id="stateChecker"
+        name="stateChecker"
+        [value]="stateChecker"
+      />
+      <input
+        type="hidden"
+        id="referrer"
+        name="referrer"
+        [value]="stateChecker"
+      />
+
+      <div class="kc-card-list">
+        @for (application of applications ?? []; track application) {
+          <div class="kc-card-row">
+            <div class="kc-card-main">
+              <span class="kc-card-icon">
+                <mat-icon>apps</mat-icon>
+              </span>
+
+              <div class="kc-card-info">
+                <div class="kc-card-title">
+                  @if (application.effectiveUrl) {
+                    <a [href]="application.effectiveUrl">
+                      @if (application.client.name) {
+                        {{ i18n.advancedMsgStr(application.client.name) }}
+                      } @else {
+                        {{ application.client.clientId }}
+                      }
+                    </a>
+                  } @else {
+                    @if (application.client.name) {
+                      {{ i18n.advancedMsgStr(application.client.name) }}
+                    } @else {
+                      {{ application.client.clientId }}
+                    }
+                  }
+                </div>
+
+                <div class="kc-card-meta">
+                  <span>
+                    <mat-icon>check_circle</mat-icon>
+                    @if (application.client.consentRequired) {
+                      @for (claim of application.clientScopesGranted; track claim) {
+                        <span class="kc-chip">{{ i18n.advancedMsgStr(claim) }}</span>
+                      }
+                    } @else {
+                      <strong>{{ i18n.msgStr('fullAccess') }}</strong>
+                    }
+                  </span>
+                  @if (application.additionalGrants.length > 0) {
+                    <span>
+                      <mat-icon>add_circle</mat-icon>
+                      @for (grant of application.additionalGrants; track grant) {
+                        <span class="kc-chip">{{ i18n.advancedMsgStr(grant) }}</span>
+                      }
+                    </span>
+                  }
+                </div>
+
+                @if (
+                  !(application.realmRolesAvailable | isArrayWithEmptyObject) || application.resourceRolesAvailable
+                ) {
+                  <div class="kc-card-chips">
+                    <mat-icon>workspace_premium</mat-icon>
+                    @if (!(application.realmRolesAvailable | isArrayWithEmptyObject)) {
+                      @for (role of application.realmRolesAvailable; track role) {
+                        <span class="kc-chip">
+                          @if (role.description) {
+                            {{ i18n.advancedMsgStr(role.description) }}
+                          } @else {
+                            {{ i18n.advancedMsgStr(role.name) }}
+                          }
+                        </span>
+                      }
+                    }
+                    @if (application.resourceRolesAvailable) {
+                      @for (resource of application.resourceRolesAvailable | keyvalue; track resource.key) {
+                        @for (clientRole of application.resourceRolesAvailable[resource.key]; track clientRole) {
+                          <span class="kc-chip">
+                            {{
+                              (clientRole.roleDescription
+                                ? i18n.advancedMsgStr(clientRole.roleDescription)
+                                : i18n.advancedMsgStr(clientRole.roleName)) +
+                                ' ' +
+                                i18n.msgStr('inResource') +
+                                ' ' +
+                                (clientRole.clientName
+                                  ? i18n.advancedMsgStr(clientRole.clientName)
+                                  : clientRole.clientId)
+                            }}
+                          </span>
+                        }
+                      }
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+
+            @if (
+              (application.client.consentRequired && application.clientScopesGranted.length > 0) ||
+              application.additionalGrants.length > 0
+            ) {
+              <div class="kc-card-actions">
+                <button
+                  mat-stroked-button
+                  color="warn"
+                  type="submit"
+                  name="clientId"
+                  [id]="'revoke-' + application.client.clientId"
+                  [value]="application.client.id"
+                >
+                  <mat-icon>link_off</mat-icon>
+                  {{ i18n.msgStr('revoke') }}
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </form>
+  }
+</div>

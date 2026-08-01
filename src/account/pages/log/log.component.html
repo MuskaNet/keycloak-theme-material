@@ -1,0 +1,53 @@
+@let log = kcContext.log;
+
+<div class="kc-page">
+  <div class="kc-page-header">
+    <h2 class="kc-page-title">{{ i18n.msgStr('accountLogHtmlTitle') }}</h2>
+  </div>
+
+  @if (log.events.length === 0) {
+    <div class="kc-page-card">
+      <div class="kc-empty-state">
+        <mat-icon>history</mat-icon>
+        <span class="kc-empty-title">{{ i18n.msgStr('noEvents') }}</span>
+      </div>
+    </div>
+  } @else {
+    <div class="kc-table-wrap">
+      <table class="kc-table">
+        <thead>
+          <tr>
+            <th>{{ i18n.msgStr('date') }}</th>
+            <th>{{ i18n.msgStr('event') }}</th>
+            <th>{{ i18n.msgStr('ip') }}</th>
+            <th>{{ i18n.msgStr('client') }}</th>
+            <th>{{ i18n.msgStr('details') }}</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (event of log.events; track event) {
+            <tr>
+              <td>{{ event.date ? (event.date | date: 'yyyy/MM/dd HH:mm') : '' }}</td>
+              <td>
+                <span class="kc-chip kc-chip-event">{{ event.event }}</span>
+              </td>
+              <td>{{ event.ipAddress }}</td>
+              <td>{{ event.client || '' }}</td>
+              <td>
+                @for (detail of event.details; track detail; let last = $last) {
+                  <span>
+                    {{ detail.key }} = {{ detail.value }}
+                    @if (!last) {
+                      ,&nbsp;
+                    }
+                  </span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

@@ -1,0 +1,96 @@
+@let url = kcContext.url;
+@let sessions = kcContext.sessions;
+@let stateChecker = kcContext.stateChecker;
+
+<div class="kc-page">
+  <div class="kc-page-header">
+    <h2 class="kc-page-title">{{ i18n.msgStr('sessionsHtmlTitle') }}</h2>
+    @if (sessions.sessions.length > 0) {
+      <form
+        method="post"
+        [action]="url.sessionsUrl"
+        class="kc-header-action"
+      >
+        <input
+          type="hidden"
+          id="stateChecker"
+          name="stateChecker"
+          [value]="stateChecker"
+        />
+        <button
+          mat-stroked-button
+          color="warn"
+          id="logout-all-sessions"
+          type="submit"
+        >
+          <mat-icon>logout</mat-icon>
+          {{ i18n.msgStr('doLogOutAllSessions') }}
+        </button>
+      </form>
+    }
+  </div>
+
+  @if (sessions.sessions.length === 0) {
+    <div class="kc-page-card">
+      <div class="kc-empty-state">
+        <mat-icon>devices_other</mat-icon>
+        <span class="kc-empty-title">{{ i18n.msgStr('noSessions') }}</span>
+      </div>
+    </div>
+  } @else {
+    <div class="kc-card-list">
+      @for (session of sessions.sessions; track session.id) {
+        <div class="kc-card-row">
+          <div class="kc-card-main">
+            <span class="kc-card-icon">
+              @if ($any(session).current) {
+                <mat-icon>computer</mat-icon>
+              } @else {
+                <mat-icon>devices_other</mat-icon>
+              }
+            </span>
+
+            <div class="kc-card-info">
+              <div class="kc-card-title">
+                {{ session.ipAddress }}
+                @if ($any(session).current) {
+                  <span class="kc-card-current-tag">
+                    <mat-icon>check_circle</mat-icon>
+                    {{ i18n.msgStr('currentSession') }}
+                  </span>
+                }
+              </div>
+
+              <div class="kc-card-meta">
+                <span>
+                  <mat-icon>schedule</mat-icon>
+                  {{ i18n.msgStr('started') }}:
+                  {{ session.started ? (session.started | date: 'yyyy/MM/dd HH:mm') : '—' }}
+                </span>
+                <span>
+                  <mat-icon>touch_app</mat-icon>
+                  {{ i18n.msgStr('lastAccess') }}:
+                  {{ session.lastAccess ? (session.lastAccess | date: 'yyyy/MM/dd HH:mm') : '—' }}
+                </span>
+                <span>
+                  <mat-icon>timer</mat-icon>
+                  {{ i18n.msgStr('expires') }}:
+                  {{ session.expires ? (session.expires | date: 'yyyy/MM/dd HH:mm') : '—' }}
+                </span>
+              </div>
+
+              @if (session.clients.length > 0) {
+                <div class="kc-card-chips">
+                  <mat-icon>apps</mat-icon>
+                  @for (client of session.clients; track client) {
+                    <span class="kc-chip">{{ client }}</span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

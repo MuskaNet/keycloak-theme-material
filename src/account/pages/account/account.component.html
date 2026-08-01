@@ -1,0 +1,237 @@
+@let url = kcContext.url;
+@let realm = kcContext.realm;
+@let messagesPerField = kcContext.messagesPerField;
+@let stateChecker = kcContext.stateChecker;
+@let account = kcContext.account;
+@let referrer = kcContext.referrer;
+@let features = kcContext.features;
+
+<div class="kc-page">
+  <!-- Welcome header -->
+  <div class="kc-page-header">
+    <h2 class="kc-page-title">{{ i18n.msgStr('accountManagementWelcomeMessage') }}</h2>
+  </div>
+
+  <!-- User summary card -->
+  <div class="kc-summary-card">
+    <span class="kc-avatar">{{ initials }}</span>
+    <div class="kc-summary-info">
+      <span class="kc-summary-name">{{ fullName }}</span>
+      <span class="kc-summary-email">{{ account.email }}</span>
+    </div>
+  </div>
+
+  <!-- Quick access cards -->
+  <div class="kc-entry-grid">
+    @if (features.passwordUpdateSupported) {
+      <a
+        class="kc-entry-card"
+        [href]="url.passwordUrl"
+      >
+        <span class="kc-entry-icon"><mat-icon>lock</mat-icon></span>
+        <span class="kc-entry-title">{{ i18n.msgStr('password') }}</span>
+        <mat-icon class="kc-entry-arrow">chevron_right</mat-icon>
+      </a>
+    }
+    <a
+      class="kc-entry-card"
+      [href]="url.totpUrl"
+    >
+      <span class="kc-entry-icon"><mat-icon>security</mat-icon></span>
+      <span class="kc-entry-title">{{ i18n.msgStr('authenticator') }}</span>
+      <mat-icon class="kc-entry-arrow">chevron_right</mat-icon>
+    </a>
+    @if (features.identityFederation) {
+      <a
+        class="kc-entry-card"
+        [href]="url.socialUrl"
+      >
+        <span class="kc-entry-icon"><mat-icon>link</mat-icon></span>
+        <span class="kc-entry-title">{{ i18n.msgStr('federatedIdentity') }}</span>
+        <mat-icon class="kc-entry-arrow">chevron_right</mat-icon>
+      </a>
+    }
+    <a
+      class="kc-entry-card"
+      [href]="url.sessionsUrl"
+    >
+      <span class="kc-entry-icon"><mat-icon>devices</mat-icon></span>
+      <span class="kc-entry-title">{{ i18n.msgStr('sessions') }}</span>
+      <mat-icon class="kc-entry-arrow">chevron_right</mat-icon>
+    </a>
+    <a
+      class="kc-entry-card"
+      [href]="url.applicationsUrl"
+    >
+      <span class="kc-entry-icon"><mat-icon>apps</mat-icon></span>
+      <span class="kc-entry-title">{{ i18n.msgStr('applications') }}</span>
+      <mat-icon class="kc-entry-arrow">chevron_right</mat-icon>
+    </a>
+    @if (features.log) {
+      <a
+        class="kc-entry-card"
+        [href]="url.logUrl"
+      >
+        <span class="kc-entry-icon"><mat-icon>history</mat-icon></span>
+        <span class="kc-entry-title">{{ i18n.msgStr('log') }}</span>
+        <mat-icon class="kc-entry-arrow">chevron_right</mat-icon>
+      </a>
+    }
+    @if (realm.userManagedAccessAllowed && features.authorization) {
+      <a
+        class="kc-entry-card"
+        [href]="url.resourceUrl"
+      >
+        <span class="kc-entry-icon"><mat-icon>shield</mat-icon></span>
+        <span class="kc-entry-title">{{ i18n.msgStr('myResources') }}</span>
+        <mat-icon class="kc-entry-arrow">chevron_right</mat-icon>
+      </a>
+    }
+  </div>
+
+  <!-- Account info edit form -->
+  <div class="kc-page-card">
+    <div class="kc-card-header">
+      <h3 class="kc-card-title">{{ i18n.msgStr('personalInfoHtmlTitle') }}</h3>
+      <span class="kc-page-subtitle">
+        <span class="kc-required-mark">*</span>
+        {{ i18n.msgStr('requiredFields') }}
+      </span>
+    </div>
+
+    <form
+      class="kc-page-form"
+      method="post"
+      [action]="url.accountUrl"
+    >
+      <input
+        type="hidden"
+        id="stateChecker"
+        name="stateChecker"
+        [value]="stateChecker"
+      />
+
+      @if (!realm.registrationEmailAsUsername) {
+        <mat-form-field
+          appearance="outline"
+          class="kc-field"
+        >
+          <mat-label>
+            {{ i18n.msgStr('username') }}
+            @if (realm.editUsernameAllowed) {
+              <span class="kc-required-mark">*</span>
+            }
+          </mat-label>
+          <input
+            matInput
+            type="text"
+            id="username"
+            name="username"
+            [disabled]="!realm.editUsernameAllowed"
+            [defaultValue]="account.username ?? ''"
+            [title]="i18n.msgStr('username')"
+            [attr.aria-invalid]="messagesPerField.existsError('username')"
+          />
+          @if (messagesPerField.existsError('username')) {
+            <mat-error [innerHTML]="messagesPerField.get('username') | kcSanitize: 'html'"></mat-error>
+          }
+        </mat-form-field>
+      }
+
+      <mat-form-field
+        appearance="outline"
+        class="kc-field"
+        [class.kc-field-full]="realm.registrationEmailAsUsername"
+      >
+        <mat-label>
+          {{ i18n.msgStr('email') }}
+          <span class="kc-required-mark">*</span>
+        </mat-label>
+        <input
+          matInput
+          type="text"
+          id="email"
+          name="email"
+          autofocus
+          [defaultValue]="account.email ?? ''"
+          [title]="i18n.msgStr('email')"
+          [attr.aria-invalid]="messagesPerField.existsError('email')"
+        />
+        @if (messagesPerField.existsError('email')) {
+          <mat-error [innerHTML]="messagesPerField.get('email') | kcSanitize: 'html'"></mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field
+        appearance="outline"
+        class="kc-field"
+      >
+        <mat-label>
+          {{ i18n.msgStr('firstName') }}
+          <span class="kc-required-mark">*</span>
+        </mat-label>
+        <input
+          matInput
+          type="text"
+          id="firstName"
+          name="firstName"
+          [defaultValue]="account.firstName"
+          [title]="i18n.msgStr('firstName')"
+          [attr.aria-invalid]="messagesPerField.existsError('firstName')"
+        />
+        @if (messagesPerField.existsError('firstName')) {
+          <mat-error [innerHTML]="messagesPerField.get('firstName') | kcSanitize: 'html'"></mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field
+        appearance="outline"
+        class="kc-field"
+      >
+        <mat-label>
+          {{ i18n.msgStr('lastName') }}
+          <span class="kc-required-mark">*</span>
+        </mat-label>
+        <input
+          matInput
+          type="text"
+          id="lastName"
+          name="lastName"
+          [title]="i18n.msgStr('lastName')"
+          [defaultValue]="account.lastName ?? ''"
+          [attr.aria-invalid]="messagesPerField.existsError('lastName')"
+        />
+        @if (messagesPerField.existsError('lastName')) {
+          <mat-error [innerHTML]="messagesPerField.get('lastName') | kcSanitize: 'html'"></mat-error>
+        }
+      </mat-form-field>
+
+      <div class="kc-actions">
+        @if (referrer) {
+          <a
+            mat-stroked-button
+            [href]="referrer!.url"
+            [innerHTML]="i18n.msgStr('backToApplication') | kcSanitize: 'html'"
+          ></a>
+        }
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          name="submitAction"
+          value="Save"
+        >
+          {{ i18n.msgStr('doSave') }}
+        </button>
+        <button
+          mat-stroked-button
+          type="submit"
+          name="submitAction"
+          value="Cancel"
+        >
+          {{ i18n.msgStr('doCancel') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

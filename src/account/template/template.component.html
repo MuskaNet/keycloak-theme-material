@@ -1,0 +1,205 @@
+@let enabledLanguages = i18n.enabledLanguages;
+@let currentLanguage = i18n.currentLanguage;
+@let url = kcContext.url;
+@let features = kcContext.features;
+@let realm = kcContext.realm;
+@let message = kcContext.message;
+@let referrer = kcContext.referrer;
+@let isReadyToRender = isReadyToRender$ | async;
+
+@if (isReadyToRender) {
+  <div class="kc-shell">
+    <header class="kc-header">
+      <div class="kc-brand">
+        @if (active !== 'account') {
+          <button
+            mat-icon-button
+            class="kc-menu-button"
+            [attr.aria-label]="i18n.msgStr('account')"
+            (click)="drawerOpen.set(!drawerOpen())"
+          >
+            <mat-icon>menu</mat-icon>
+          </button>
+        }
+        <mat-icon class="kc-brand-icon">account_circle</mat-icon>
+        <span class="kc-brand-title">{{ i18n.msgStr('accountManagementTitle') }}</span>
+      </div>
+
+      <div class="kc-header-actions">
+        @if (!!referrer?.url) {
+          <a
+            mat-icon-button
+            [href]="referrer?.url"
+            class="kc-icon-button"
+            [attr.aria-label]="i18n.msgStr('backTo', referrer?.name)"
+          >
+            <mat-icon>arrow_back</mat-icon>
+          </a>
+        }
+
+        <a
+          mat-icon-button
+          [href]="url.getLogoutUrl()"
+          class="kc-icon-button"
+          [attr.aria-label]="i18n.msgStr('doSignOut')"
+        >
+          <mat-icon>logout</mat-icon>
+        </a>
+      </div>
+    </header>
+
+    <div class="kc-layout">
+      <div
+        class="kc-drawer-scrim"
+        [class.kc-open]="drawerOpen()"
+        (click)="closeDrawer()"
+      ></div>
+      <nav
+        class="kc-sidebar"
+        [class.kc-open]="drawerOpen()"
+      >
+        <a
+          class="kc-nav-item"
+          [class.kc-active]="active === 'account'"
+          [href]="url.accountUrl"
+          (click)="closeDrawer()"
+        >
+          <span class="kc-nav-icon"><mat-icon>person</mat-icon></span>
+          <span class="kc-nav-label">{{ i18n.msgStr('account') }}</span>
+        </a>
+        @if (features.passwordUpdateSupported) {
+          <a
+            class="kc-nav-item"
+            [class.kc-active]="active === 'password'"
+            [href]="url.passwordUrl"
+            (click)="closeDrawer()"
+          >
+            <span class="kc-nav-icon"><mat-icon>lock</mat-icon></span>
+            <span class="kc-nav-label">{{ i18n.msgStr('password') }}</span>
+          </a>
+        }
+        <a
+          class="kc-nav-item"
+          [class.kc-active]="active === 'totp'"
+          [href]="url.totpUrl"
+          (click)="closeDrawer()"
+        >
+          <span class="kc-nav-icon"><mat-icon>security</mat-icon></span>
+          <span class="kc-nav-label">{{ i18n.msgStr('authenticator') }}</span>
+        </a>
+        @if (features.identityFederation) {
+          <a
+            class="kc-nav-item"
+            [class.kc-active]="active === 'social'"
+            [href]="url.socialUrl"
+            (click)="closeDrawer()"
+          >
+            <span class="kc-nav-icon"><mat-icon>link</mat-icon></span>
+            <span class="kc-nav-label">{{ i18n.msgStr('federatedIdentity') }}</span>
+          </a>
+        }
+        <a
+          class="kc-nav-item"
+          [class.kc-active]="active === 'sessions'"
+          [href]="url.sessionsUrl"
+          (click)="closeDrawer()"
+        >
+          <span class="kc-nav-icon"><mat-icon>devices</mat-icon></span>
+          <span class="kc-nav-label">{{ i18n.msgStr('sessions') }}</span>
+        </a>
+        <a
+          class="kc-nav-item"
+          [class.kc-active]="active === 'applications'"
+          [href]="url.applicationsUrl"
+          (click)="closeDrawer()"
+        >
+          <span class="kc-nav-icon"><mat-icon>apps</mat-icon></span>
+          <span class="kc-nav-label">{{ i18n.msgStr('applications') }}</span>
+        </a>
+        @if (features.log) {
+          <a
+            class="kc-nav-item"
+            [class.kc-active]="active === 'log'"
+            [href]="url.logUrl"
+            (click)="closeDrawer()"
+          >
+            <span class="kc-nav-icon"><mat-icon>history</mat-icon></span>
+            <span class="kc-nav-label">{{ i18n.msgStr('log') }}</span>
+          </a>
+        }
+        @if (realm.userManagedAccessAllowed && features.authorization) {
+          <a
+            class="kc-nav-item"
+            [class.kc-active]="active === 'authorization'"
+            [href]="url.resourceUrl"
+            (click)="closeDrawer()"
+          >
+            <span class="kc-nav-icon"><mat-icon>shield</mat-icon></span>
+            <span class="kc-nav-label">{{ i18n.msgStr('myResources') }}</span>
+          </a>
+        }
+      </nav>
+
+      <main class="kc-main">
+        @if (message) {
+          <div
+            class="kc-alert kc-alert-{{ message.type }}"
+            role="alert"
+          >
+            <mat-icon class="kc-alert-icon">
+              @switch (message.type) {
+                @case ('success') {
+                  check_circle
+                }
+                @case ('warning') {
+                  warning
+                }
+                @case ('info') {
+                  info
+                }
+                @case ('error') {
+                  error
+                }
+              }
+            </mat-icon>
+            <span
+              class="kc-alert-message"
+              [innerHTML]="message.summary | kcSanitize: 'html'"
+            ></span>
+          </div>
+        }
+
+        <div class="kc-page-wrap">
+          <ng-template #pageRef></ng-template>
+        </div>
+
+        <div class="kc-footer-spacer"></div>
+
+        <footer class="kc-footer">
+          @if (enabledLanguages.length > 1) {
+            <div class="kc-locale">
+              <button
+                mat-button
+                [matMenuTriggerFor]="localeMenu"
+                class="kc-locale-button"
+              >
+                <mat-icon>language</mat-icon>
+                {{ currentLanguage.label }}
+              </button>
+              <mat-menu #localeMenu="matMenu">
+                @for (enabledLanguage of enabledLanguages; track enabledLanguage.languageTag) {
+                  <a
+                    mat-menu-item
+                    [href]="enabledLanguage.href"
+                  >
+                    {{ enabledLanguage.label }}
+                  </a>
+                }
+              </mat-menu>
+            </div>
+          }
+        </footer>
+      </main>
+    </div>
+  </div>
+}

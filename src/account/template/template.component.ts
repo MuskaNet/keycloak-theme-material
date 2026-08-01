@@ -1,0 +1,118 @@
+import { AsyncPipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  effect,
+  type EffectRef,
+  forwardRef,
+  inject,
+  input,
+  Renderer2,
+  signal,
+  type Type,
+  viewChild,
+  ViewContainerRef,
+} from '@angular/core';
+import { Meta, Title } from '@angular/platform-browser';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { ComponentReference } from '@keycloakify/angular/account/classes/component-reference';
+import type { I18n } from '@keycloakify/angular/account/i18n';
+import type { KcContext } from '@keycloakify/angular/account/KcContext';
+import { AccountResourceInjectorService } from '@keycloakify/angular/account/services/account-resource-injector';
+import { ACCOUNT_CLASSES } from '@keycloakify/angular/account/tokens/classes';
+import { ACCOUNT_I18N } from '@keycloakify/angular/account/tokens/i18n';
+import { KC_ACCOUNT_CONTEXT } from '@keycloakify/angular/account/tokens/kc-context';
+import { KcSanitizePipe } from '@keycloakify/angular/lib/pipes/kc-sanitize';
+import { USE_DEFAULT_CSS } from '@keycloakify/angular/lib/tokens/use-default-css';
+import { type ClassKey, getKcClsx } from 'keycloakify/account/lib/kcClsx';
+import type { Observable } from 'rxjs';
+
+type ActiveType =
+  'account' | 'password' | 'totp' | 'social' | 'sessions' | 'applications' | 'log' | 'authorization' | undefined;
+
+@Component({
+  selector: 'kc-root',
+  templateUrl: 'template.component.html',
+  styleUrl: 'template.component.scss',
+  imports: [AsyncPipe, KcSanitizePipe, MatButtonModule, MatIconModule, MatMenuModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: ComponentReference,
+      useExisting: forwardRef(() => TemplateComponent),
+    },
+  ],
+})
+export class TemplateComponent extends ComponentReference {
+  i18n = inject<I18n>(ACCOUNT_I18N);
+  renderer = inject(Renderer2);
+  #cdr = inject(ChangeDetectorRef);
+  #effectRef: EffectRef;
+  meta = inject(Meta);
+  title = inject(Title);
+  kcContext = inject<KcContext>(KC_ACCOUNT_CONTEXT);
+  override doUseDefaultCss = inject<boolean>(USE_DEFAULT_CSS);
+  override classes = inject<Partial<Record<ClassKey, string>>>(ACCOUNT_CLASSES);
+  accountResourceInjectorService = inject(AccountResourceInjectorService);
+
+  isReadyToRender$: Observable<boolean>;
+
+  page = input<Type<unknown>>();
+  pageRef = viewChild('pageRef', { read: ViewContainerRef });
+
+  active: ActiveType;
+
+  drawerOpen = signal(false);
+
+  closeDrawer() {
+    this.drawerOpen.set(false);
+  }
+
+  constructor() {
+    super();
+
+    this.isReadyToRender$ = this.accountResourceInjectorService.injectResource(this.doUseDefaultCss);
+    this.#effectRef = effect(
+      () => {
+        const page = this.page();
+        const pageRef = this.pageRef();
+        if (!page || !pageRef) return;
+
+        const compRef = pageRef.createComponent(page);
+        this.onComponentCreated(compRef.instance as object);
+      },
+      { manualCleanup: true },
+    );
+  }
+
+  private applyKcIndexClasses() {
+    const kcClsx = getKcClsx({
+      doUseDefaultCss: this.doUseDefaultCss,
+      classes: this.classes,
+    }).kcClsx;
+    const kcBodyClass = kcClsx('kcBodyClass');
+    const kcHtmlClass = kcClsx('kcHtmlClass');
+    const kcBodyClasses = kcBodyClass.split(/\s+/);
+    const kcHtmlClasses = kcHtmlClass.split(/\s+/);
+    kcBodyClasses.push('admin-console', 'user');
+    kcBodyClasses.forEach((klass) => {
+      this.renderer.addClass(document.body, klass);
+    });
+    kcHtmlClasses.forEach((klass) => {
+      this.renderer.addClass(document.documentElement, klass);
+    });
+  }
+
+  onComponentCreated(compRef: object) {
+    if ('active' in compRef && compRef.active) {
+      this.active = compRef.active as ActiveType;
+    }
+    this.title.setTitle(this.i18n.msgStr('accountManagementTitle'));
+    this.applyKcIndexClasses();
+    this.#cdr.markForCheck();
+    this.#effectRef.destroy();
+  }
+}
