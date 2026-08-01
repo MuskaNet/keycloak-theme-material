@@ -94,7 +94,7 @@
               id="totp"
               name="totp"
               type="text"
-              autocomplete="off"
+              autocomplete="one-time-code"
               autofocus
               [title]="i18n.msgStr('authenticatorCode')"
               [attr.aria-invalid]="messagesPerField.existsError('totp')"
