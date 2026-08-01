@@ -14,7 +14,7 @@
   <div class="kc-login-brand">
     <div
       class="kc-login-logo"
-      [innerHTML]="kcContext.realm.displayNameHtml ?? '' | kcSanitize: 'html'"
+      [innerHTML]="kcContext.realm.displayNameHtml | kcSanitize: 'html'"
     ></div>
     <h1 class="kc-login-title">
       @if (headerNode) {
@@ -95,8 +95,10 @@
             type="button"
             class="kc-register-back"
             (click)="previousStep()"
-            [innerHTML]="i18n.msgStr('doBack') | kcSanitize: 'html'"
-          ></button>
+            [attr.aria-label]="i18n.msgStr('doBack')"
+          >
+            {{ i18n.msgStr('doBack') }}
+          </button>
         }
 
         @if (!isLastStep) {

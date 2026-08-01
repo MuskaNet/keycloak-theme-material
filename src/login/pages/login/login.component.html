@@ -39,7 +39,7 @@
   <div class="kc-login-brand">
     <div
       class="kc-login-logo"
-      [innerHTML]="realm?.displayNameHtml ?? '' | kcSanitize: 'html'"
+      [innerHTML]="realm?.displayNameHtml | kcSanitize: 'html'"
     ></div>
     @if (auth && auth.showUsername && !auth.showResetCredentials) {
       <div class="kc-login-attempted">
@@ -99,6 +99,7 @@
                 name="username"
                 type="text"
                 autofocus
+                [title]="i18n.msgStr('username')"
                 [autocomplete]="kcContext.enableWebAuthnConditionalUI === true ? 'username webauthn' : 'username'"
                 [defaultValue]="login?.username || ''"
                 [attr.aria-invalid]="messagesPerField?.existsError('username', 'password')"
@@ -134,6 +135,7 @@
               name="password"
               [type]="isPasswordVisible() ? 'text' : 'password'"
               autocomplete="current-password"
+              [title]="i18n.msgStr('password')"
               [attr.aria-invalid]="messagesPerField.existsError('username', 'password')"
             />
             <button

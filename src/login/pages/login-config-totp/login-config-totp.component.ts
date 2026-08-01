@@ -62,4 +62,9 @@ export class LoginConfigTotpComponent extends ComponentReference {
   previousStep(): void {
     this.totpStep.update((step) => Math.max(0, step - 1));
   }
+
+  handleEnter(event: Event, buttonId: string): void {
+    event.preventDefault();
+    document.getElementById(buttonId)?.click();
+  }
 }

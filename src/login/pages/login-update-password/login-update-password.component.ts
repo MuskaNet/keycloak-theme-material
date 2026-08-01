@@ -65,4 +65,9 @@ export class LoginUpdatePasswordComponent extends ComponentReference {
   toggleConfirmPasswordVisibility(): void {
     this.isConfirmPasswordVisible.update((visible) => !visible);
   }
+
+  handleEnter(event: Event, buttonId: string): void {
+    event.preventDefault();
+    document.getElementById(buttonId)?.click();
+  }
 }

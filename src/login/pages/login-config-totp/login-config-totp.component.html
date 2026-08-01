@@ -12,7 +12,7 @@
   <div class="kc-page-brand">
     <div
       class="kc-page-logo"
-      [innerHTML]="realm.displayNameHtml ?? '' | kcSanitize: 'html'"
+      [innerHTML]="realm.displayNameHtml | kcSanitize: 'html'"
     ></div>
     <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
 
@@ -27,6 +27,7 @@
       id="kc-totp-settings-form"
       method="post"
       [action]="url.loginAction"
+      (keydown.enter)="handleEnter($event, 'saveTOTPBtn')"
     >
       <div class="kc-form-content kc-totp-content">
         @if (totpStep() === 0) {
@@ -95,6 +96,7 @@
               type="text"
               autocomplete="off"
               autofocus
+              [title]="i18n.msgStr('authenticatorCode')"
               [attr.aria-invalid]="messagesPerField.existsError('totp')"
             />
             @if (messagesPerField.existsError('totp')) {
@@ -128,6 +130,7 @@
               name="userLabel"
               type="text"
               autocomplete="off"
+              [title]="i18n.msgStr('loginTotpDeviceName')"
               [attr.aria-invalid]="messagesPerField.existsError('userLabel')"
             />
             @if (messagesPerField.existsError('userLabel')) {

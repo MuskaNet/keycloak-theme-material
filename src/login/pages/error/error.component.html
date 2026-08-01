@@ -11,7 +11,7 @@
   <div class="kc-page-brand">
     <div
       class="kc-page-logo"
-      [innerHTML]="realm.displayNameHtml ?? '' | kcSanitize: 'html'"
+      [innerHTML]="realm.displayNameHtml | kcSanitize: 'html'"
     ></div>
     <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
   </div>

@@ -4,7 +4,7 @@
     @let attr = fieldState.attribute;
     @let values = $any(fieldState.valueOrValues);
     @let errors = fieldState.displayableErrors;
-    @let type = attr.annotations?.inputType;
+    @let type = attr.annotations.inputType;
     @let multivalued = isMultivalued(attr);
     @let options = getOptions(attr);
 
@@ -36,13 +36,13 @@
               [value]="values"
               [readonly]="attr.readOnly"
               [autocomplete]="attr.autocomplete"
-              [placeholder]="getLabel(attr.annotations?.inputTypePlaceholder ?? '')"
+              [placeholder]="getLabel(attr.annotations.inputTypePlaceholder ?? '')"
               [attr.aria-label]="getLabel(attr.displayName)"
               [title]="getLabel(attr.displayName)"
               (input)="onFieldInput(attr.name, $any($event.target).value)"
               (blur)="onFieldBlur(attr.name)"
             ></textarea>
-            @if (attr.annotations?.inputHelperTextBefore) {
+            @if (attr.annotations.inputHelperTextBefore) {
               <mat-hint align="start">{{ getLabel(attr.annotations.inputHelperTextBefore) }}</mat-hint>
             }
             @for (error of getErrorsForField(errors, undefined); track error) {
@@ -62,7 +62,7 @@
             </mat-label>
             <mat-select
               [id]="attr.name"
-              [name]="attr.name"
+              [attr.name]="attr.name"
               [value]="values"
               [multiple]="type === 'multiselect'"
               [disabled]="attr.readOnly"
@@ -76,7 +76,7 @@
                 <mat-option [value]="option">{{ getLabel(attr.name + '.' + option) || option }}</mat-option>
               }
             </mat-select>
-            @if (attr.annotations?.inputHelperTextBefore) {
+            @if (attr.annotations.inputHelperTextBefore) {
               <mat-hint align="start">{{ getLabel(attr.annotations.inputHelperTextBefore) }}</mat-hint>
             }
             @for (error of getErrorsForField(errors, undefined); track error) {
@@ -152,8 +152,9 @@
                   [type]="getInputType(attr)"
                   [readonly]="attr.readOnly"
                   [autocomplete]="attr.autocomplete"
-                  [placeholder]="getLabel(attr.annotations?.inputTypePlaceholder ?? '')"
+                  [placeholder]="getLabel(attr.annotations.inputTypePlaceholder ?? '')"
                   [attr.aria-label]="getLabel(attr.displayName)"
+                  [title]="getLabel(attr.displayName)"
                   (input)="onMultiValueFieldUpdate(attr.name, valueArray, i, $any($event.target).value)"
                   (blur)="onFieldBlur(attr.name)"
                 />
@@ -168,7 +169,7 @@
                     <mat-icon>remove_circle_outline</mat-icon>
                   </button>
                 }
-                @if (attr.annotations?.inputHelperTextBefore) {
+                @if (attr.annotations.inputHelperTextBefore) {
                   <mat-hint align="start">{{ getLabel(attr.annotations.inputHelperTextBefore) }}</mat-hint>
                 }
               </mat-form-field>
@@ -186,7 +187,7 @@
                 (click)="onAddValue(attr.name, valueArray)"
               >
                 <mat-icon>add</mat-icon>
-                {{ getLabel(attr.annotations?.inputTypePlaceholder ?? attr.name) }}
+                {{ getLabel(attr.annotations.inputTypePlaceholder ?? attr.name) }}
               </button>
             }
           } @else {
@@ -201,20 +202,22 @@
                   *
                 }
               </mat-label>
+              <input
+                matInput
+                [id]="attr.name"
+                [name]="attr.name"
+                [value]="values"
+                [type]="isPassword(attr) ? (isPasswordVisible(attr.name) ? 'text' : 'password') : getInputType(attr)"
+                [readonly]="attr.readOnly"
+                [autocomplete]="attr.autocomplete"
+                [placeholder]="getLabel(attr.annotations.inputTypePlaceholder ?? '')"
+                [attr.pattern]="!isPassword(attr) ? attr.annotations.inputTypePattern : undefined"
+                [attr.aria-label]="getLabel(attr.displayName)"
+                [title]="getLabel(attr.displayName)"
+                (input)="onFieldInput(attr.name, $any($event.target).value)"
+                (blur)="onFieldBlur(attr.name)"
+              />
               @if (isPassword(attr)) {
-                <input
-                  matInput
-                  [id]="attr.name"
-                  [name]="attr.name"
-                  [value]="values"
-                  [type]="isPasswordVisible(attr.name) ? 'text' : 'password'"
-                  [readonly]="attr.readOnly"
-                  [autocomplete]="attr.autocomplete"
-                  [placeholder]="getLabel(attr.annotations?.inputTypePlaceholder ?? '')"
-                  [attr.aria-label]="getLabel(attr.displayName)"
-                  (input)="onFieldInput(attr.name, $any($event.target).value)"
-                  (blur)="onFieldBlur(attr.name)"
-                />
                 <button
                   mat-icon-button
                   matSuffix
@@ -224,23 +227,8 @@
                 >
                   <mat-icon>{{ isPasswordVisible(attr.name) ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
-              } @else {
-                <input
-                  matInput
-                  [id]="attr.name"
-                  [name]="attr.name"
-                  [value]="values"
-                  [type]="getInputType(attr)"
-                  [readonly]="attr.readOnly"
-                  [autocomplete]="attr.autocomplete"
-                  [placeholder]="getLabel(attr.annotations?.inputTypePlaceholder ?? '')"
-                  [attr.pattern]="attr.annotations?.inputTypePattern"
-                  [attr.aria-label]="getLabel(attr.displayName)"
-                  (input)="onFieldInput(attr.name, $any($event.target).value)"
-                  (blur)="onFieldBlur(attr.name)"
-                />
               }
-              @if (attr.annotations?.inputHelperTextBefore) {
+              @if (attr.annotations.inputHelperTextBefore) {
                 <mat-hint align="start">{{ getLabel(attr.annotations.inputHelperTextBefore) }}</mat-hint>
               }
               @for (error of getErrorsForField(errors, undefined); track error) {

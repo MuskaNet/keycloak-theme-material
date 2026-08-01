@@ -1,6 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, forwardRef, inject, type TemplateRef, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { KcSanitizePipe } from '@keycloakify/angular/lib/pipes/kc-sanitize';
 import { USE_DEFAULT_CSS } from '@keycloakify/angular/lib/tokens/use-default-css';
 import { ComponentReference } from '@keycloakify/angular/login/classes/component-reference';
 import type { I18n } from '@keycloakify/angular/login/i18n';
@@ -11,7 +12,7 @@ import { KC_LOGIN_CONTEXT } from '@keycloakify/angular/login/tokens/kc-context';
 import type { ClassKey } from 'keycloakify/login/lib/kcClsx';
 
 @Component({
-  imports: [NgTemplateOutlet, MatButtonModule],
+  imports: [NgTemplateOutlet, MatButtonModule, KcSanitizePipe],
   selector: 'kc-terms',
   templateUrl: 'terms.component.html',
   styleUrl: '../page-common.scss',

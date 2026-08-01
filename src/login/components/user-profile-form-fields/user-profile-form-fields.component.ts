@@ -1,4 +1,4 @@
-import { NgTemplateOutlet, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -44,7 +44,6 @@ import type { ClassKey } from 'keycloakify/login/lib/kcClsx';
     MatInputModule,
     MatRadioModule,
     MatSelectModule,
-    NgTemplateOutlet,
   ],
   providers: [
     UserProfileFormService,
@@ -126,7 +125,7 @@ export class UserProfileFormFieldsComponent extends ComponentReference {
     });
   }
 
-  getLabel(displayName: string): string {
+  getLabel(displayName: string | undefined): string {
     return this.i18n.advancedMsgStr(displayName ?? '');
   }
 
@@ -162,13 +161,16 @@ export class UserProfileFormFieldsComponent extends ComponentReference {
     return attr.annotations?.inputType === 'hidden';
   }
 
-  isMultivalued(attr: { annotations?: { multivalued?: boolean } }): boolean {
-    return !!attr.annotations?.multivalued;
+  isMultivalued(attr: { annotations?: Record<string, unknown> }): boolean {
+    return !!attr.annotations?.['multivalued'];
   }
 
-  getErrorsForField(errors: { fieldIndex: number | undefined }[], fieldIndex: number | undefined): object[] {
+  getErrorsForField(
+    errors: { fieldIndex: number | undefined }[],
+    fieldIndex: number | undefined,
+  ): { errorMessage: string }[] {
     const index = fieldIndex ?? 0;
-    return errors.filter((e) => (e.fieldIndex ?? 0) === index);
+    return errors.filter((e) => (e.fieldIndex ?? 0) === index) as unknown as { errorMessage: string }[];
   }
 
   getInputType(attr: { annotations?: { inputType?: string } }): string {
@@ -179,8 +181,8 @@ export class UserProfileFormFieldsComponent extends ComponentReference {
     return inputType;
   }
 
-  getOptions(attr: { annotations?: { inputOptions?: string[] } }): string[] {
-    return attr.annotations?.inputOptions ?? [];
+  getOptions(attr: { annotations?: Record<string, unknown> }): string[] {
+    return (attr.annotations?.['inputOptions'] as string[]) ?? [];
   }
 
   trackByField(_: number, field: { attribute: { name: string } }): string {

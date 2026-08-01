@@ -41,4 +41,9 @@ export class DeleteCredentialComponent extends ComponentReference {
   headerNode = viewChild<TemplateRef<HTMLElement>>('headerNode');
   infoNode = viewChild<TemplateRef<HTMLElement>>('infoNode');
   socialProvidersNode = viewChild<TemplateRef<HTMLElement>>('socialProvidersNode');
+
+  handleEnter(event: Event, buttonId: string): void {
+    event.preventDefault();
+    document.getElementById(buttonId)?.click();
+  }
 }
