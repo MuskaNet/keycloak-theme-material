@@ -2,15 +2,18 @@ import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   forwardRef,
   inject,
   input,
+  signal,
   type TemplateRef,
   type Type,
   viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
+import { KcSanitizePipe } from '@keycloakify/angular/lib/pipes/kc-sanitize';
 import { USE_DEFAULT_CSS } from '@keycloakify/angular/lib/tokens/use-default-css';
 import { ComponentReference } from '@keycloakify/angular/login/classes/component-reference';
 import { type UserProfileFormFieldsComponent } from '@keycloakify/angular/login/components/user-profile-form-fields';
@@ -26,9 +29,9 @@ import { map } from 'rxjs';
 @Component({
   selector: 'kc-login-update-profile',
   templateUrl: 'login-update-profile.component.html',
-  styleUrl: '../login/login.component.scss',
+  styleUrl: '../register/register.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgComponentOutlet, NgTemplateOutlet, MatButtonModule],
+  imports: [NgComponentOutlet, NgTemplateOutlet, KcSanitizePipe, MatButtonModule],
   providers: [
     UserProfileFormService,
     { provide: ComponentReference, useExisting: forwardRef(() => LoginUpdateProfileComponent) },
@@ -47,7 +50,7 @@ export class LoginUpdateProfileComponent extends ComponentReference {
 
   displayRequiredFields = true;
   displayInfo = false;
-  displayMessage = this.kcContext.messagesPerField.exists('global');
+  displayMessage = true;
 
   headerNode = viewChild<TemplateRef<HTMLElement>>('headerNode');
   infoNode = viewChild<TemplateRef<HTMLElement>>('infoNode');
@@ -56,5 +59,46 @@ export class LoginUpdateProfileComponent extends ComponentReference {
   isFormSubmittable = toSignal(this.#userProfileFormService.formState$.pipe(map((s) => s.isFormSubmittable)), {
     initialValue: false,
   });
+  formFieldStates = toSignal(this.#userProfileFormService.formState$.pipe(map((s) => s.formFieldStates)), {
+    initialValue: [],
+  });
   userProfileFormFields = input<Type<UserProfileFormFieldsComponent>>();
+
+  registrationStep = signal(0);
+
+  fieldNames = computed(() => this.formFieldStates().map(({ attribute }) => attribute.name));
+
+  registrationSteps = computed(() => {
+    const fields = this.fieldNames();
+    const profileFields = fields.filter(
+      (f) => f === 'username' || f === 'email' || f === 'firstName' || f === 'lastName',
+    );
+    const steps: string[][] = [];
+    for (let i = 0; i < profileFields.length; i += 2) {
+      steps.push(profileFields.slice(i, i + 2));
+    }
+    return steps;
+  });
+
+  visibleFieldNames = computed(
+    () => this.registrationSteps()[Math.min(this.registrationStep(), this.registrationSteps().length - 1)] ?? [],
+  );
+
+  get hasMultipleSteps(): boolean {
+    return this.registrationSteps().length > 1;
+  }
+
+  get isLastStep(): boolean {
+    return !this.hasMultipleSteps || this.registrationStep() === this.registrationSteps().length - 1;
+  }
+
+  nextStep(): void {
+    if (!this.isLastStep) {
+      this.registrationStep.update((step) => step + 1);
+    }
+  }
+
+  previousStep(): void {
+    this.registrationStep.update((step) => Math.max(0, step - 1));
+  }
 }

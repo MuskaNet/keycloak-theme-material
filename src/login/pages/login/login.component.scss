@@ -1,6 +1,7 @@
 @use '../page-common.scss';
 
 .kc-login-card {
+  position: relative;
   display: flex;
   width: 100%;
   height: min(380px, calc(100dvh - 128px));
@@ -8,6 +9,14 @@
   border-radius: 28px;
   background-color: var(--mat-sys-surface-container-low);
   overflow: hidden;
+}
+
+.kc-card-restart-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .kc-login-brand {

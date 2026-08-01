@@ -36,6 +36,17 @@
 </ng-template>
 
 <div class="kc-login-card">
+  @if (auth?.showUsername && !auth?.showResetCredentials) {
+    <a
+      mat-icon-button
+      class="kc-card-restart-btn"
+      [href]="url?.loginRestartFlowUrl"
+      [matTooltip]="i18n.msgStr('restartLoginTooltip')"
+      [attr.aria-label]="i18n.msgStr('restartLoginTooltip')"
+    >
+      <mat-icon>refresh</mat-icon>
+    </a>
+  }
   <div class="kc-login-brand">
     <div
       class="kc-login-logo"
@@ -44,15 +55,6 @@
     @if (auth && auth.showUsername && !auth.showResetCredentials) {
       <div class="kc-login-attempted">
         <span class="kc-attempted-username-label">{{ auth?.attemptedUsername }}</span>
-        <a
-          mat-button
-          class="kc-restart-login"
-          [href]="url?.loginRestartFlowUrl"
-          [attr.aria-label]="i18n.msgStr('restartLoginTooltip')"
-        >
-          <mat-icon>refresh</mat-icon>
-          {{ i18n.msgStr('restartLoginTooltip') }}
-        </a>
       </div>
     } @else {
       <h1 class="kc-login-title">

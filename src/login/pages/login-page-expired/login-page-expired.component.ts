@@ -1,5 +1,8 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, forwardRef, inject, type TemplateRef, viewChild } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { USE_DEFAULT_CSS } from '@keycloakify/angular/lib/tokens/use-default-css';
 import { ComponentReference } from '@keycloakify/angular/login/classes/component-reference';
 import type { I18n } from '@keycloakify/angular/login/i18n';
@@ -14,7 +17,7 @@ import type { ClassKey } from 'keycloakify/login/lib/kcClsx';
   templateUrl: 'login-page-expired.component.html',
   styleUrl: '../page-common.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, MatButtonModule, MatIconModule, MatTooltipModule],
   providers: [
     {
       provide: ComponentReference,

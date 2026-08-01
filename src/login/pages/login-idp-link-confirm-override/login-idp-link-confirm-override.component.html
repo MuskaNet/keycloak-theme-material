@@ -6,6 +6,15 @@
 </ng-template>
 
 <div class="kc-page-card">
+  <a
+    mat-icon-button
+    class="kc-card-restart-btn"
+    [href]="url.loginRestartFlowUrl"
+    [matTooltip]="i18n.msgStr('restartLoginTooltip')"
+    [attr.aria-label]="i18n.msgStr('restartLoginTooltip')"
+  >
+    <mat-icon>refresh</mat-icon>
+  </a>
   <div class="kc-page-brand">
     <h1 class="kc-page-title"><ng-container [ngTemplateOutlet]="headerNode" /></h1>
   </div>
