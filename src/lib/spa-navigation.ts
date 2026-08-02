@@ -212,7 +212,7 @@ function onDocumentSubmit(event: SubmitEvent): void {
     return;
   }
 
-  const action = new URL(form.action || window.location.href, window.location.href);
+  const action = new URL(form.getAttribute('action') || window.location.href, window.location.href);
   if (
     !isSameSpaHost(action) ||
     action.origin !== window.location.origin ||
