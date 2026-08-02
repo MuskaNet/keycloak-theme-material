@@ -218,6 +218,10 @@ function onDocumentSubmit(event: SubmitEvent): void {
   }
 
   const action = new URL(form.getAttribute('action') || window.location.href, window.location.href);
+  if (isIdentityLinkRequiredAction()) {
+    return;
+  }
+
   if (
     !isSameSpaHost(action) ||
     action.origin !== window.location.origin ||
@@ -249,6 +253,10 @@ function onDocumentSubmit(event: SubmitEvent): void {
     method,
     body: formData,
   });
+}
+
+function isIdentityLinkRequiredAction(): boolean {
+  return new URL(window.location.href).searchParams.get('execution') === 'idp_link';
 }
 
 function isSameSpaHost(url: URL): boolean {
