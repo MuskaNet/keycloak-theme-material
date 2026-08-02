@@ -74,40 +74,20 @@
                     [id]="'remove-link-' + identity.providerId"
                   >
                     <mat-icon>link_off</mat-icon>
-                    {{ i18n.msgStr('doRemove') }}
+                    {{ i18n.msgStr('unlinkIdentity') }}
                   </button>
                 </form>
               }
             } @else {
-              <form
-                method="post"
-                [action]="url.socialUrl"
+              <a
+                mat-flat-button
+                color="primary"
+                [href]="getLinkActionUrl(identity.providerId)"
+                [id]="'add-link-' + identity.providerId"
               >
-                <input
-                  type="hidden"
-                  name="stateChecker"
-                  [value]="stateChecker"
-                />
-                <input
-                  type="hidden"
-                  name="action"
-                  value="add"
-                />
-                <input
-                  type="hidden"
-                  name="providerId"
-                  [value]="identity.providerId"
-                />
-                <button
-                  mat-flat-button
-                  color="primary"
-                  type="submit"
-                  [id]="'add-link-' + identity.providerId"
-                >
-                  <mat-icon>add_link</mat-icon>
-                  {{ i18n.msgStr('doAdd') }}
-                </button>
-              </form>
+                <mat-icon>add_link</mat-icon>
+                {{ i18n.msgStr('linkIdentity') }}
+              </a>
             }
           </div>
         </div>

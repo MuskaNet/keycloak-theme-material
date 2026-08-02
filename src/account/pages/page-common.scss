@@ -266,6 +266,48 @@ a {
   gap: 12px;
 }
 
+/* Redirect guide (operations delegated to the login theme via AIA) */
+.kc-redirect-guide {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.kc-redirect-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+  color: var(--mat-sys-primary);
+
+  mat-icon {
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.kc-redirect-content {
+  flex: 1;
+  min-width: 200px;
+}
+
+.kc-redirect-message {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.kc-redirect-action {
+  flex-shrink: 0;
+}
+
 .kc-card-row {
   display: flex;
   align-items: center;

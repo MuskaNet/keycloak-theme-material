@@ -7,11 +7,6 @@
 @let features = kcContext.features;
 
 <div class="kc-page">
-  <!-- Welcome header -->
-  <div class="kc-page-header">
-    <h2 class="kc-page-title">{{ i18n.msgStr('accountManagementWelcomeMessage') }}</h2>
-  </div>
-
   <!-- User summary card -->
   <div class="kc-summary-card">
     <span class="kc-avatar">{{ initials }}</span>
@@ -127,7 +122,7 @@
             type="text"
             id="username"
             name="username"
-            [disabled]="!realm.editUsernameAllowed"
+            [disabled]="!isEditing() || !realm.editUsernameAllowed"
             [defaultValue]="account.username ?? ''"
             [title]="i18n.msgStr('username')"
             [attr.aria-invalid]="messagesPerField.existsError('username')"
@@ -152,7 +147,7 @@
           type="text"
           id="email"
           name="email"
-          autofocus
+          [disabled]="!isEditing()"
           [defaultValue]="account.email ?? ''"
           [title]="i18n.msgStr('email')"
           [attr.aria-invalid]="messagesPerField.existsError('email')"
@@ -175,6 +170,7 @@
           type="text"
           id="firstName"
           name="firstName"
+          [disabled]="!isEditing()"
           [defaultValue]="account.firstName"
           [title]="i18n.msgStr('firstName')"
           [attr.aria-invalid]="messagesPerField.existsError('firstName')"
@@ -197,6 +193,7 @@
           type="text"
           id="lastName"
           name="lastName"
+          [disabled]="!isEditing()"
           [title]="i18n.msgStr('lastName')"
           [defaultValue]="account.lastName ?? ''"
           [attr.aria-invalid]="messagesPerField.existsError('lastName')"
@@ -207,30 +204,41 @@
       </mat-form-field>
 
       <div class="kc-actions">
-        @if (referrer) {
-          <a
+        @if (!isEditing()) {
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            (click)="isEditing.set(true)"
+          >
+            <mat-icon>edit</mat-icon>
+            {{ i18n.msgStr('editProfile') }}
+          </button>
+        } @else {
+          @if (referrer) {
+            <a
+              mat-stroked-button
+              [href]="referrer!.url"
+              [innerHTML]="i18n.msgStr('backToApplication') | kcSanitize: 'html'"
+            ></a>
+          }
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            name="submitAction"
+            value="Save"
+          >
+            {{ i18n.msgStr('doSave') }}
+          </button>
+          <button
             mat-stroked-button
-            [href]="referrer!.url"
-            [innerHTML]="i18n.msgStr('backToApplication') | kcSanitize: 'html'"
-          ></a>
+            type="button"
+            (click)="isEditing.set(false)"
+          >
+            {{ i18n.msgStr('doCancel') }}
+          </button>
         }
-        <button
-          mat-flat-button
-          color="primary"
-          type="submit"
-          name="submitAction"
-          value="Save"
-        >
-          {{ i18n.msgStr('doSave') }}
-        </button>
-        <button
-          mat-stroked-button
-          type="submit"
-          name="submitAction"
-          value="Cancel"
-        >
-          {{ i18n.msgStr('doCancel') }}
-        </button>
       </div>
     </form>
   </div>

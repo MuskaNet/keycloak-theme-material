@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, forwardRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,6 +32,16 @@ export class AccountComponent extends ComponentReference {
   override doUseDefaultCss = inject<boolean>(USE_DEFAULT_CSS);
   override classes = inject<Partial<Record<ClassKey, string>>>(ACCOUNT_CLASSES);
   active = 'account';
+
+  /**
+   * Profile fields are disabled by default to avoid the mobile keyboard
+   * popping up on page load. Clicking "Edit" enables them; "Save" submits,
+   * "Cancel" re-disables them without submitting. If the server rejected the
+   * previous submission (field errors), the form opens in edit mode instead.
+   */
+  readonly isEditing = signal(
+    ['username', 'email', 'firstName', 'lastName'].some((field) => this.kcContext.messagesPerField.existsError(field)),
+  );
 
   get initials(): string {
     const first = this.kcContext.account.firstName?.charAt(0) ?? '';

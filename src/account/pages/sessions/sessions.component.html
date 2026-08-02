@@ -65,17 +65,17 @@
                 <span>
                   <mat-icon>schedule</mat-icon>
                   {{ i18n.msgStr('started') }}:
-                  {{ session.started ? (session.started | date: 'yyyy/MM/dd HH:mm') : '—' }}
+                  {{ formatSessionTime(session.started) }}
                 </span>
                 <span>
                   <mat-icon>touch_app</mat-icon>
                   {{ i18n.msgStr('lastAccess') }}:
-                  {{ session.lastAccess ? (session.lastAccess | date: 'yyyy/MM/dd HH:mm') : '—' }}
+                  {{ formatSessionTime(session.lastAccess) }}
                 </span>
                 <span>
                   <mat-icon>timer</mat-icon>
                   {{ i18n.msgStr('expires') }}:
-                  {{ session.expires ? (session.expires | date: 'yyyy/MM/dd HH:mm') : '—' }}
+                  {{ formatSessionTime(session.expires) }}
                 </span>
               </div>
 

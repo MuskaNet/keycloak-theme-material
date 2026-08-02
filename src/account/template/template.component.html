@@ -21,8 +21,12 @@
             <mat-icon>menu</mat-icon>
           </button>
         }
-        <mat-icon class="kc-brand-icon">account_circle</mat-icon>
-        <span class="kc-brand-title">{{ i18n.msgStr('accountManagementTitle') }}</span>
+        <span class="kc-brand-title">{{
+          $any(realm).displayNameHtml ||
+            $any(realm).displayName ||
+            $any(realm).name ||
+            i18n.msgStr('accountManagementTitle')
+        }}</span>
       </div>
 
       <div class="kc-header-actions">
@@ -67,17 +71,6 @@
           <span class="kc-nav-icon"><mat-icon>person</mat-icon></span>
           <span class="kc-nav-label">{{ i18n.msgStr('account') }}</span>
         </a>
-        @if (features.passwordUpdateSupported) {
-          <a
-            class="kc-nav-item"
-            [class.kc-active]="active === 'password'"
-            [href]="url.passwordUrl"
-            (click)="closeDrawer()"
-          >
-            <span class="kc-nav-icon"><mat-icon>lock</mat-icon></span>
-            <span class="kc-nav-label">{{ i18n.msgStr('password') }}</span>
-          </a>
-        }
         <a
           class="kc-nav-item"
           [class.kc-active]="active === 'totp'"

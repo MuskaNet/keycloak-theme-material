@@ -10,6 +10,7 @@ import { ACCOUNT_I18N } from '@keycloakify/angular/account/tokens/i18n';
 import { KC_ACCOUNT_CONTEXT } from '@keycloakify/angular/account/tokens/kc-context';
 import { USE_DEFAULT_CSS } from '@keycloakify/angular/lib/tokens/use-default-css';
 import type { ClassKey } from 'keycloakify/account/lib/kcClsx';
+import { buildKcActionUrl } from '../../lib/kc-action';
 
 @Component({
   selector: 'kc-federated-identity',
@@ -54,5 +55,14 @@ export class FederatedIdentityComponent extends ComponentReference {
 
   getIconClass(providerId: string): string | undefined {
     return this.providerIconClasses[providerId.toLowerCase()];
+  }
+
+  /**
+   * Account linking is handled by the login theme
+   * (login-idp-link-confirm.ftl flow) through the parameterized AIA
+   * "idp_link:{providerAlias}".
+   */
+  getLinkActionUrl(providerAlias: string): string {
+    return buildKcActionUrl(this.kcContext.url.accountUrl, `idp_link:${providerAlias}`);
   }
 }

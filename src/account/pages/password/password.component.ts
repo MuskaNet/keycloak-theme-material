@@ -1,8 +1,6 @@
-import { ChangeDetectionStrategy, Component, forwardRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { ComponentReference } from '@keycloakify/angular/account/classes/component-reference';
 import type { I18n } from '@keycloakify/angular/account/i18n';
 import type { KcContext } from '@keycloakify/angular/account/KcContext';
@@ -11,12 +9,13 @@ import { ACCOUNT_I18N } from '@keycloakify/angular/account/tokens/i18n';
 import { KC_ACCOUNT_CONTEXT } from '@keycloakify/angular/account/tokens/kc-context';
 import { USE_DEFAULT_CSS } from '@keycloakify/angular/lib/tokens/use-default-css';
 import type { ClassKey } from 'keycloakify/account/lib/kcClsx';
+import { buildKcActionUrl } from '../../lib/kc-action';
 
 @Component({
   selector: 'kc-password',
   templateUrl: 'password.component.html',
   styleUrl: '../page-common.scss',
-  imports: [MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule],
+  imports: [MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
@@ -33,96 +32,11 @@ export class PasswordComponent extends ComponentReference {
 
   active = 'password';
 
-  currentPassword = signal('');
-  newPassword = signal('');
-  newPasswordConfirm = signal('');
-  newPasswordError = signal('');
-  newPasswordConfirmError = signal('');
-  hasNewPasswordBlurred = signal(false);
-  hasNewPasswordConfirmBlurred = signal(false);
-
-  isCurrentPasswordVisible = signal(false);
-  isNewPasswordVisible = signal(false);
-  isConfirmPasswordVisible = signal(false);
-
-  constructor() {
-    super();
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    window.kcContext = {
-      ...this.kcContext,
-      message: (() => {
-        if (this.newPasswordError() !== '') {
-          return {
-            type: 'error',
-            summary: this.newPasswordError(),
-          };
-        }
-        if (this.newPasswordConfirmError() !== '') {
-          return {
-            type: 'error',
-            summary: this.newPasswordConfirmError(),
-          };
-        }
-        return this.kcContext.message;
-      })(),
-    };
-  }
-
-  toggleCurrentPasswordVisibility(): void {
-    this.isCurrentPasswordVisible.update((visible) => !visible);
-  }
-
-  toggleNewPasswordVisibility(): void {
-    this.isNewPasswordVisible.update((visible) => !visible);
-  }
-
-  toggleConfirmPasswordVisibility(): void {
-    this.isConfirmPasswordVisible.update((visible) => !visible);
-  }
-
-  checkNewPassword(newPassword: string) {
-    if (!this.kcContext.password.passwordSet) return;
-    if (newPassword === this.currentPassword()) {
-      this.newPasswordError.set('newPasswordSameAsOld');
-    } else {
-      this.newPasswordError.set('');
-    }
-  }
-  checkNewPasswordConfirm(newPasswordConfirm: string) {
-    if (newPasswordConfirm === '') return;
-    if (newPasswordConfirm !== this.newPassword()) {
-      this.newPasswordConfirmError.set('passwordConfirmNotMatch');
-    } else {
-      this.newPasswordConfirmError.set('');
-    }
-  }
-
-  onNewPasswordChange(value: string) {
-    const newPassword = value;
-
-    this.newPassword.set(newPassword);
-    if (this.hasNewPasswordBlurred()) {
-      this.checkNewPassword(newPassword);
-    }
-  }
-
-  onNewPasswordBlur() {
-    this.hasNewPasswordBlurred.set(true);
-    this.checkNewPassword(this.newPassword());
-  }
-
-  onNewPasswordConfirmChange(value: string) {
-    const newPasswordConfirm = value;
-
-    this.newPasswordConfirm.set(newPasswordConfirm);
-    if (this.hasNewPasswordConfirmBlurred()) {
-      this.checkNewPasswordConfirm(newPasswordConfirm);
-    }
-  }
-
-  onNewPasswordConfirmBlur() {
-    this.hasNewPasswordConfirmBlurred.set(true);
-    this.checkNewPasswordConfirm(this.newPasswordConfirm());
+  /**
+   * The password update form is handled by the login theme
+   * (login-update-password.ftl) through an Application Initiated Action.
+   */
+  getPasswordUpdateUrl(): string {
+    return buildKcActionUrl(this.kcContext.url.accountUrl, 'UPDATE_PASSWORD');
   }
 }

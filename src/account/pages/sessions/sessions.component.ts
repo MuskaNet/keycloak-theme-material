@@ -30,4 +30,19 @@ export class SessionsComponent extends ComponentReference {
   override doUseDefaultCss = inject<boolean>(USE_DEFAULT_CSS);
   override classes = inject<Partial<Record<ClassKey, string>>>(ACCOUNT_CLASSES);
   active = 'sessions';
+
+  private readonly datePipe = new DatePipe('en-US');
+
+  /** Keycloak returns epoch strings (e.g. "1722585600000"); format safely. */
+  formatSessionTime(value: string | undefined): string {
+    if (!value) {
+      return '—';
+    }
+    const numeric = Number(value);
+    const date = Number.isNaN(numeric) ? new Date(value) : new Date(numeric);
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+    return this.datePipe.transform(date, 'yyyy/MM/dd HH:mm') ?? value;
+  }
 }
