@@ -87,10 +87,57 @@
       </a>
     </div>
 
-    <div class="kc-empty-state">
-      <mat-icon>key</mat-icon>
-      <span class="kc-empty-title">{{ i18n.msgStr('noPasskeys') }}</span>
-      <span class="kc-empty-subtitle">{{ i18n.msgStr('passkeySetupRedirectMessage') }}</span>
-    </div>
+    @if (passkeysLoading()) {
+      <div class="kc-empty-state">
+        <mat-icon>hourglass_empty</mat-icon>
+        <span class="kc-empty-title">{{ i18n.msgStr('loading') }}</span>
+      </div>
+    } @else if (passkeysError()) {
+      <div class="kc-empty-state kc-empty-state-error">
+        <mat-icon>error_outline</mat-icon>
+        <span class="kc-empty-title">{{ i18n.msgStr('passkeysErrorTitle') }}</span>
+        <span class="kc-empty-subtitle">{{ passkeysError() }}</span>
+      </div>
+    } @else if (passkeys().length === 0) {
+      <div class="kc-empty-state">
+        <mat-icon>key</mat-icon>
+        <span class="kc-empty-title">{{ i18n.msgStr('noPasskeys') }}</span>
+        <span class="kc-empty-subtitle">{{ i18n.msgStr('passkeySetupRedirectMessage') }}</span>
+      </div>
+    } @else {
+      <div class="kc-card-list">
+        @for (passkey of passkeys(); track passkey; let index = $index) {
+          <div class="kc-card-row">
+            <div class="kc-card-main">
+              <span class="kc-card-icon">
+                <mat-icon>key</mat-icon>
+              </span>
+
+              <div class="kc-card-info">
+                <div class="kc-card-title">{{ passkey.userLabel || i18n.msgStr('passkey') }}</div>
+                <div class="kc-card-meta">
+                  <span>
+                    <mat-icon>key</mat-icon>
+                    {{ i18n.msgStr('passkey') }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="kc-card-actions">
+              <a
+                mat-stroked-button
+                color="warn"
+                [href]="getKcActionUrl('delete_credential:' + passkey.id)"
+                [id]="'remove-passkey-' + index"
+              >
+                <mat-icon>delete</mat-icon>
+                {{ i18n.msgStr('doRemove') }}
+              </a>
+            </div>
+          </div>
+        }
+      </div>
+    }
   </section>
 </div>

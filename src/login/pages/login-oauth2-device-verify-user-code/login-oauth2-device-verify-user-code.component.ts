@@ -1,6 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, forwardRef, inject, type TemplateRef, viewChild } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { USE_DEFAULT_CSS } from '@keycloakify/angular/lib/tokens/use-default-css';
@@ -17,7 +16,7 @@ import type { ClassKey } from 'keycloakify/login/lib/kcClsx';
   templateUrl: 'login-oauth2-device-verify-user-code.component.html',
   styleUrl: '../page-common.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgTemplateOutlet, FormsModule, MatButtonModule, MatInputModule],
+  imports: [NgTemplateOutlet, MatButtonModule, MatInputModule],
   providers: [
     {
       provide: ComponentReference,

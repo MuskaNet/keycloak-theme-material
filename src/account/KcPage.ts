@@ -1,5 +1,9 @@
 import { getDefaultPageComponent, type KcPage } from '@keycloakify/angular/account';
 import { TemplateComponent } from './template';
+// Ensure oidc-spa early init runs on every account page: the silent sign-in
+// iframe loads this page (redirect_uri) and must postMessage back to the
+// parent, which only happens if oidcEarlyInit() has executed here.
+import './oidc';
 import type { ClassKey } from 'keycloakify/account/lib/kcClsx';
 import type { KcContext } from './KcContext';
 

@@ -14,7 +14,6 @@ import {
   viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
@@ -36,15 +35,7 @@ import { map } from 'rxjs';
   templateUrl: 'register.component.html',
   styleUrl: 'register.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    NgComponentOutlet,
-    NgTemplateOutlet,
-    FormsModule,
-    KcSanitizePipe,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatInputModule,
-  ],
+  imports: [NgComponentOutlet, NgTemplateOutlet, KcSanitizePipe, MatButtonModule, MatCheckboxModule, MatInputModule],
   providers: [
     {
       provide: ComponentReference,

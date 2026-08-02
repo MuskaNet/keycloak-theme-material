@@ -2,6 +2,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   forwardRef,
   inject,
   signal,
@@ -54,6 +55,8 @@ export class LoginConfigTotpComponent extends ComponentReference {
   socialProvidersNode = viewChild<TemplateRef<HTMLElement>>('socialProvidersNode');
 
   totpStep = signal(0);
+
+  secretGroups = computed(() => this.kcContext.totp.totpSecretEncoded.replace(/\s+/g, '').match(/.{1,4}/g) ?? []);
 
   nextStep(): void {
     this.totpStep.update((step) => Math.min(1, step + 1));

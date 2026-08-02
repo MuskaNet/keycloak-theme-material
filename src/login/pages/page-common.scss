@@ -256,6 +256,10 @@
     background-color: var(--mat-sys-surface-container-high);
     padding: 4px 8px;
     border-radius: 4px;
+
+    .kc-totp-secret-group + .kc-totp-secret-group {
+      margin-left: 8px;
+    }
   }
 }
 

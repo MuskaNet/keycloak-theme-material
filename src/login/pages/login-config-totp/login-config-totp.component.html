@@ -42,7 +42,11 @@
             @if (mode === 'manual') {
               <p class="kc-totp-step-label">{{ i18n.msgStr('loginTotpManualStep2') }}</p>
               <p class="kc-totp-secret-key">
-                <code>{{ totp.totpSecretEncoded }}</code>
+                <code>
+                  @for (group of secretGroups(); track $index) {
+                    <span class="kc-totp-secret-group">{{ group }}</span>
+                  }
+                </code>
               </p>
               <p>
                 <a
