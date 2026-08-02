@@ -183,7 +183,7 @@ function onDocumentClick(event: MouseEvent): void {
   if (anchor.target === '_blank' || anchor.hasAttribute('download')) return;
 
   const url = new URL(href, window.location.href);
-  if (url.origin !== window.location.origin) return;
+  if (!isSameSpaHost(url) || url.origin !== window.location.origin) return;
 
   if (isAuthenticationRedirect(url) && !url.searchParams.has('kc_action')) return;
 
@@ -214,6 +214,7 @@ function onDocumentSubmit(event: SubmitEvent): void {
 
   const action = new URL(form.action || window.location.href, window.location.href);
   if (
+    !isSameSpaHost(action) ||
     action.origin !== window.location.origin ||
     (isAuthenticationRedirect(action) && !action.searchParams.has('kc_action'))
   ) {
@@ -243,4 +244,8 @@ function onDocumentSubmit(event: SubmitEvent): void {
     method,
     body: formData,
   });
+}
+
+function isSameSpaHost(url: URL): boolean {
+  return url.host === window.location.host;
 }
