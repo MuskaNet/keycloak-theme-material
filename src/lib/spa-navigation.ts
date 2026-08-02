@@ -185,6 +185,7 @@ function onDocumentClick(event: MouseEvent): void {
   const url = new URL(href, window.location.href);
   if (!isSameSpaHost(url) || url.origin !== window.location.origin) return;
 
+  if (isIdentityLinkAction(url)) return;
   if (isAuthenticationRedirect(url) && !url.searchParams.has('kc_action')) return;
 
   const realmPath = window.location.pathname.match(/^(\/realms\/[^/]+)/)?.[1];
@@ -200,6 +201,10 @@ function isAuthenticationRedirect(url: URL): boolean {
     url.pathname.includes('/broker/') ||
     url.searchParams.has('kc_idp_hint')
   );
+}
+
+function isIdentityLinkAction(url: URL): boolean {
+  return url.searchParams.get('kc_action')?.startsWith('idp_link:') ?? false;
 }
 
 function onDocumentSubmit(event: SubmitEvent): void {
