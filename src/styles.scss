@@ -108,3 +108,67 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--mat-sys-outline-variant) transparent;
 }
+
+/* SPA-style top progress bar (Material indeterminate) */
+.kc-spa-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 100000;
+  overflow: hidden;
+  pointer-events: none;
+  display: none;
+}
+
+.kc-spa-progress.active {
+  display: block;
+}
+
+.kc-spa-progress .bar1,
+.kc-spa-progress .bar2 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40%;
+  background-color: var(--mat-sys-primary);
+}
+
+.kc-spa-progress .bar1 {
+  animation: kc-spa-progress-1 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+}
+
+.kc-spa-progress .bar2 {
+  animation: kc-spa-progress-2 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+}
+
+@keyframes kc-spa-progress-1 {
+  0% {
+    left: -35%;
+    right: 100%;
+  }
+  60% {
+    left: 100%;
+    right: -90%;
+  }
+  100% {
+    left: 100%;
+    right: -90%;
+  }
+}
+
+@keyframes kc-spa-progress-2 {
+  0% {
+    left: -200%;
+    right: 100%;
+  }
+  60% {
+    left: 107%;
+    right: -8%;
+  }
+  100% {
+    left: 107%;
+    right: -8%;
+  }
+}

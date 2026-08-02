@@ -31,6 +31,7 @@ import { LOGIN_I18N } from '@keycloakify/angular/login/tokens/i18n';
 import { KC_LOGIN_CONTEXT } from '@keycloakify/angular/login/tokens/kc-context';
 import { type ClassKey, getKcClsx } from 'keycloakify/login/lib/kcClsx';
 import type { Observable } from 'rxjs';
+import { initSpaNavigation } from '../../lib/spa-navigation';
 
 @Component({
   selector: 'kc-root',
@@ -93,6 +94,8 @@ export class TemplateComponent extends ComponentReference {
       },
       { manualCleanup: true },
     );
+
+    initSpaNavigation();
   }
 
   private applyKcIndexClasses() {

@@ -29,6 +29,7 @@ import { KcSanitizePipe } from '@keycloakify/angular/lib/pipes/kc-sanitize';
 import { USE_DEFAULT_CSS } from '@keycloakify/angular/lib/tokens/use-default-css';
 import { type ClassKey, getKcClsx } from 'keycloakify/account/lib/kcClsx';
 import type { Observable } from 'rxjs';
+import { initSpaNavigation } from '../../lib/spa-navigation';
 
 type ActiveType =
   'account' | 'password' | 'totp' | 'social' | 'sessions' | 'applications' | 'log' | 'authorization' | undefined;
@@ -86,6 +87,8 @@ export class TemplateComponent extends ComponentReference {
       },
       { manualCleanup: true },
     );
+
+    initSpaNavigation();
   }
 
   private applyKcIndexClasses() {
