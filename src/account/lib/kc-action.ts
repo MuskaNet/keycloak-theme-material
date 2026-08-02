@@ -26,11 +26,13 @@ export function buildKcActionUrl(accountUrl: string, kcAction: string, redirectU
   }
 
   const authUrl = new URL(`${realmMatch[1]}/protocol/openid-connect/auth`, baseUrl.origin);
+  const defaultRedirectUri = new URL(baseUrl.origin);
+  defaultRedirectUri.pathname = baseUrl.pathname;
 
   authUrl.searchParams.set('client_id', 'account');
   authUrl.searchParams.set('response_type', 'code');
   authUrl.searchParams.set('scope', 'openid');
-  authUrl.searchParams.set('redirect_uri', redirectUri ?? baseUrl.href);
+  authUrl.searchParams.set('redirect_uri', redirectUri ?? defaultRedirectUri.href);
   authUrl.searchParams.set('kc_action', kcAction);
 
   return authUrl.toString();
