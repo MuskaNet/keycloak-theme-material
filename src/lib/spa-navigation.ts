@@ -59,14 +59,6 @@ function extractKcContext(html: string): KcContext | undefined {
 }
 
 async function rebootstrap(kcContext: KcContext): Promise<void> {
-  // Preload the target page component chunk while the current page is still
-  // visible, so the swap has no network round-trip.
-  const getKcPage =
-    kcContext.themeType === 'account'
-      ? (await import('../account/KcPage')).getKcPage
-      : (await import('../login/KcPage')).getKcPage;
-  await getKcPage(kcContext.pageId);
-
   // The new app renders into an off-screen host first. The old page stays on
   // screen until the new one has actually rendered content, then we swap the
   // hosts and destroy the old app — no blank flash in between.
@@ -117,12 +109,13 @@ async function waitForContent(host: HTMLElement, appRef: ApplicationRef): Promis
   console.warn('[spa-navigation] New page did not render within 5s, swapping anyway.');
 }
 
-export async function navigateTo(url: string): Promise<void> {
+async function navigateRequest(url: string, init?: RequestInit): Promise<void> {
   showProgress();
 
   try {
     const response = await fetch(url, {
-      headers: { Accept: 'text/html' },
+      ...init,
+      headers: { Accept: 'text/html', ...init?.headers },
     });
 
     if (!response.ok) {
@@ -147,6 +140,10 @@ export async function navigateTo(url: string): Promise<void> {
   }
 }
 
+export async function navigateTo(url: string): Promise<void> {
+  await navigateRequest(url);
+}
+
 /** Handles browser back/forward after a pushState navigation. */
 export function initSpaPopstateHandler(): void {
   window.addEventListener('popstate', () => {
@@ -165,6 +162,7 @@ export function initSpaNavigation(): void {
   }
   hasSpaNavigationListener = true;
   document.addEventListener('click', onDocumentClick, true);
+  document.addEventListener('submit', onDocumentSubmit, true);
 }
 
 function onDocumentClick(event: MouseEvent): void {
@@ -187,9 +185,62 @@ function onDocumentClick(event: MouseEvent): void {
   const url = new URL(href, window.location.href);
   if (url.origin !== window.location.origin) return;
 
+  if (isAuthenticationRedirect(url) && !url.searchParams.has('kc_action')) return;
+
   const realmPath = window.location.pathname.match(/^(\/realms\/[^/]+)/)?.[1];
   if (!realmPath || !url.pathname.startsWith(realmPath)) return;
 
   event.preventDefault();
   void navigateTo(url.href);
+}
+
+function isAuthenticationRedirect(url: URL): boolean {
+  return (
+    url.pathname.includes('/protocol/openid-connect/auth') ||
+    url.pathname.includes('/broker/') ||
+    url.searchParams.has('kc_idp_hint')
+  );
+}
+
+function onDocumentSubmit(event: SubmitEvent): void {
+  if (event.defaultPrevented) {
+    return;
+  }
+
+  const form = event.target;
+  if (!(form instanceof HTMLFormElement)) {
+    return;
+  }
+
+  const action = new URL(form.action || window.location.href, window.location.href);
+  if (
+    action.origin !== window.location.origin ||
+    (isAuthenticationRedirect(action) && !action.searchParams.has('kc_action'))
+  ) {
+    return;
+  }
+
+  const realmPath = window.location.pathname.match(/^(\/realms\/[^/]+)/)?.[1];
+  if (!realmPath || !action.pathname.startsWith(realmPath)) {
+    return;
+  }
+
+  event.preventDefault();
+  const method = (form.method || 'get').toUpperCase();
+  const formData = event.submitter instanceof HTMLElement ? new FormData(form, event.submitter) : new FormData(form);
+
+  if (method === 'GET') {
+    for (const [key, value] of formData.entries()) {
+      if (typeof value === 'string') {
+        action.searchParams.append(key, value);
+      }
+    }
+    void navigateRequest(action.href, { method: 'GET' });
+    return;
+  }
+
+  void navigateRequest(action.href, {
+    method,
+    body: formData,
+  });
 }
