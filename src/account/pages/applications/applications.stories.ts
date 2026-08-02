@@ -122,3 +122,67 @@ export const WithApplications: Story = {
     },
   },
 };
+
+export const WithMissingClient: Story = {
+  globals: {
+    kcContext: {
+      applications: {
+        applications: [
+          {
+            realmRolesAvailable: [{ name: 'offline_access', description: '' }],
+            resourceRolesAvailable: {},
+            additionalGrants: [],
+            clientScopesGranted: ['profile', 'email'],
+            effectiveUrl: 'https://example.com',
+            client: {
+              alwaysDisplayInConsole: false,
+              attributes: {},
+              authenticationFlowBindingOverrides: {},
+              bearerOnly: false,
+              clientAuthenticatorType: '',
+              consentRequired: true,
+              consentScreenText: '',
+              description: '',
+              directAccessGrantsEnabled: false,
+              displayOnConsentScreen: false,
+              dynamicScope: false,
+              enabled: true,
+              frontchannelLogout: false,
+              fullScopeAllowed: false,
+              id: '1',
+              implicitFlowEnabled: false,
+              includeInTokenScope: true,
+              managementUrl: '',
+              name: 'My App',
+              nodeReRegistrationTimeout: '',
+              notBefore: '',
+              protocol: 'openid-connect',
+              protocolMappersStream: {},
+              publicClient: true,
+              realm: {},
+              realmScopeMappingsStream: {},
+              redirectUris: [],
+              registeredNodes: {},
+              rolesStream: {},
+              scopeMappingsStream: {},
+              secret: '',
+              serviceAccountsEnabled: false,
+              standardFlowEnabled: true,
+              surrogateAuthRequired: false,
+              webOrigins: [],
+            },
+          },
+          {
+            // 模拟生产环境：client 已被删除，consent 残留 → keycloakify 序列化跳过 null client 字段
+            realmRolesAvailable: [],
+            resourceRolesAvailable: {},
+            additionalGrants: [],
+            clientScopesGranted: [],
+            effectiveUrl: undefined,
+            client: undefined,
+          },
+        ],
+      },
+    },
+  },
+};

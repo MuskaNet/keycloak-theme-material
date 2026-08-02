@@ -3,21 +3,29 @@
 <div class="kc-page">
   <div class="kc-page-header">
     <h2 class="kc-page-title">{{ i18n.msgStr('authenticatorTitle') }}</h2>
-    @if (totp.otpCredentials.length) {
-      <span class="kc-page-subtitle">
-        <span class="kc-required-mark">*</span>
-        {{ i18n.msgStr('requiredFields') }}
-      </span>
-    }
   </div>
 
-  @if (totp.enabled) {
+  <!-- OTP authenticators -->
+  <section class="kc-section">
+    <div class="kc-section-header">
+      <div class="kc-section-heading">
+        <h3 class="kc-section-title">{{ i18n.msgStr('otpAuthenticators') }}</h3>
+        <p class="kc-section-desc">{{ i18n.msgStr('otpHelpText') }}</p>
+      </div>
+      <a
+        mat-flat-button
+        color="primary"
+        [href]="getKcActionUrl('CONFIGURE_TOTP')"
+      >
+        <mat-icon>add</mat-icon>
+        {{ i18n.msgStr('setupOtpButton') }}
+      </a>
+    </div>
+
     @if (totp.otpCredentials.length === 0) {
-      <div class="kc-page-card">
-        <div class="kc-empty-state">
-          <mat-icon>phonelink_lock</mat-icon>
-          <span class="kc-empty-title">{{ i18n.msgStr('noTotpConfigured') }}</span>
-        </div>
+      <div class="kc-empty-state">
+        <mat-icon>phonelink_lock</mat-icon>
+        <span class="kc-empty-title">{{ i18n.msgStr('noTotpConfigured') }}</span>
       </div>
     } @else {
       <div class="kc-card-list">
@@ -60,26 +68,29 @@
         }
       </div>
     }
-  } @else {
-    <div class="kc-page-card">
-      <div class="kc-redirect-guide">
-        <div class="kc-redirect-icon">
-          <mat-icon>phonelink_lock</mat-icon>
-        </div>
-        <div class="kc-redirect-content">
-          <p class="kc-redirect-message">{{ i18n.msgStr('totpSetupRedirectMessage') }}</p>
-        </div>
-        <div class="kc-redirect-action">
-          <a
-            mat-flat-button
-            color="primary"
-            [href]="getKcActionUrl('CONFIGURE_TOTP')"
-          >
-            <mat-icon>arrow_forward</mat-icon>
-            {{ i18n.msgStr('totpSetupButton') }}
-          </a>
-        </div>
+  </section>
+
+  <!-- Passkeys -->
+  <section class="kc-section">
+    <div class="kc-section-header">
+      <div class="kc-section-heading">
+        <h3 class="kc-section-title">{{ i18n.msgStr('passkeys') }}</h3>
+        <p class="kc-section-desc">{{ i18n.msgStr('passkeyHelpText') }}</p>
       </div>
+      <a
+        mat-flat-button
+        color="primary"
+        [href]="getKcActionUrl('webauthn-register')"
+      >
+        <mat-icon>add</mat-icon>
+        {{ i18n.msgStr('addPasskey') }}
+      </a>
     </div>
-  }
+
+    <div class="kc-empty-state">
+      <mat-icon>key</mat-icon>
+      <span class="kc-empty-title">{{ i18n.msgStr('noPasskeys') }}</span>
+      <span class="kc-empty-subtitle">{{ i18n.msgStr('passkeySetupRedirectMessage') }}</span>
+    </div>
+  </section>
 </div>

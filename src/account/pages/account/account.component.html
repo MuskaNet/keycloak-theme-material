@@ -133,29 +133,38 @@
         </mat-form-field>
       }
 
-      <mat-form-field
-        appearance="outline"
-        class="kc-field"
-        [class.kc-field-full]="realm.registrationEmailAsUsername"
-      >
-        <mat-label>
-          {{ i18n.msgStr('email') }}
-          <span class="kc-required-mark">*</span>
-        </mat-label>
-        <input
-          matInput
-          type="text"
-          id="email"
-          name="email"
-          [disabled]="!isEditing()"
-          [defaultValue]="account.email ?? ''"
-          [title]="i18n.msgStr('email')"
-          [attr.aria-invalid]="messagesPerField.existsError('email')"
-        />
-        @if (messagesPerField.existsError('email')) {
-          <mat-error [innerHTML]="messagesPerField.get('email') | kcSanitize: 'html'"></mat-error>
-        }
-      </mat-form-field>
+      <div class="kc-email-field kc-field-full">
+        <mat-form-field
+          appearance="outline"
+          class="kc-field"
+        >
+          <mat-label>
+            {{ i18n.msgStr('email') }}
+            <span class="kc-required-mark">*</span>
+          </mat-label>
+          <input
+            matInput
+            type="text"
+            id="email"
+            name="email"
+            disabled
+            [defaultValue]="account.email ?? ''"
+            [title]="i18n.msgStr('email')"
+            [attr.aria-invalid]="messagesPerField.existsError('email')"
+          />
+          @if (messagesPerField.existsError('email')) {
+            <mat-error [innerHTML]="messagesPerField.get('email') | kcSanitize: 'html'"></mat-error>
+          }
+        </mat-form-field>
+        <a
+          mat-stroked-button
+          class="kc-update-email-btn"
+          [href]="getKcActionUrl('UPDATE_EMAIL')"
+        >
+          <mat-icon>mail</mat-icon>
+          {{ i18n.msgStr('updateEmail') }}
+        </a>
+      </div>
 
       <mat-form-field
         appearance="outline"
@@ -241,5 +250,22 @@
         }
       </div>
     </form>
+  </div>
+
+  <!-- Delete account: delegated to the login theme via AIA -->
+  <div class="kc-page-card kc-danger-zone">
+    <mat-icon class="kc-danger-icon">warning</mat-icon>
+    <div class="kc-danger-content">
+      <h3 class="kc-card-title">{{ i18n.msgStr('deleteAccount') }}</h3>
+      <p class="kc-danger-message">{{ i18n.msgStr('deleteAccountWarning') }}</p>
+    </div>
+    <a
+      mat-flat-button
+      color="warn"
+      [href]="getKcActionUrl('DELETE_ACCOUNT')"
+    >
+      <mat-icon>delete_forever</mat-icon>
+      {{ i18n.msgStr('doDelete') }}
+    </a>
   </div>
 </div>

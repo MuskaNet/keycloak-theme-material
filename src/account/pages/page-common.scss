@@ -100,8 +100,10 @@
   white-space: nowrap;
 }
 
-/* Global link styles, mirrors the login theme */
-a {
+/* Global link styles, mirrors the login theme.
+   Exclude Material buttons (rendered as <a mat-button>) so they keep
+   their own colors/font instead of being overridden. */
+a:not([class*='mat-']) {
   color: var(--mat-sys-primary);
   font-weight: 500;
   text-decoration: none;
@@ -564,4 +566,82 @@ a {
   .kc-page-form {
     grid-template-columns: 1fr;
   }
+}
+
+/* Email field + "update email" link (edit delegated to login theme) */
+.kc-email-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  .kc-field {
+    flex: 1;
+  }
+}
+
+.kc-update-email-btn {
+  margin-top: 10px;
+  flex-shrink: 0;
+}
+
+/* Destructive zone (delete account, delegated to login theme) */
+.kc-danger-zone {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.kc-danger-icon {
+  flex-shrink: 0;
+  color: var(--mat-sys-error);
+}
+
+.kc-danger-content {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kc-danger-message {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+/* Authenticator sections (OTP / Passkey) */
+.kc-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.kc-section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.kc-section-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.kc-section-title {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
+  color: var(--mat-sys-on-surface);
+}
+
+.kc-section-desc {
+  margin: 0;
+  font-size: 13px;
+  color: var(--mat-sys-on-surface-variant);
 }

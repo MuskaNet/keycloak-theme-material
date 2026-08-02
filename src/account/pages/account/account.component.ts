@@ -12,6 +12,7 @@ import { KC_ACCOUNT_CONTEXT } from '@keycloakify/angular/account/tokens/kc-conte
 import { KcSanitizePipe } from '@keycloakify/angular/lib/pipes/kc-sanitize';
 import { USE_DEFAULT_CSS } from '@keycloakify/angular/lib/tokens/use-default-css';
 import type { ClassKey } from 'keycloakify/account/lib/kcClsx';
+import { buildKcActionUrl } from '../../lib/kc-action';
 
 @Component({
   selector: 'kc-account',
@@ -52,4 +53,14 @@ export class AccountComponent extends ComponentReference {
   get fullName(): string {
     return [this.kcContext.account.firstName, this.kcContext.account.lastName].filter(Boolean).join(' ') || 'User';
   }
+
+  /**
+   * Email changes and account deletion are delegated to the login theme
+   * through Application Initiated Actions (UPDATE_EMAIL, DELETE_ACCOUNT).
+   */
+  getKcActionUrl(kcAction: string): string {
+    return buildKcActionUrl(this.kcContext.url.accountUrl, kcAction);
+  }
+
+  buildKcActionUrl = buildKcActionUrl;
 }

@@ -44,17 +44,21 @@
                 <div class="kc-card-title">
                   @if (application.effectiveUrl) {
                     <a [href]="application.effectiveUrl">
-                      @if (application.client.name) {
+                      @if (application.client?.name) {
                         {{ i18n.advancedMsgStr(application.client.name) }}
-                      } @else {
+                      } @else if (application.client?.clientId) {
                         {{ application.client.clientId }}
+                      } @else {
+                        {{ application.effectiveUrl }}
                       }
                     </a>
                   } @else {
-                    @if (application.client.name) {
+                    @if (application.client?.name) {
                       {{ i18n.advancedMsgStr(application.client.name) }}
-                    } @else {
+                    } @else if (application.client?.clientId) {
                       {{ application.client.clientId }}
+                    } @else {
+                      {{ i18n.msgStr('unknownApplication') }}
                     }
                   }
                 </div>
@@ -62,7 +66,7 @@
                 <div class="kc-card-meta">
                   <span>
                     <mat-icon>check_circle</mat-icon>
-                    @if (application.client.consentRequired) {
+                    @if (application.client?.consentRequired) {
                       @for (claim of application.clientScopesGranted; track claim) {
                         <span class="kc-chip">{{ i18n.advancedMsgStr(claim) }}</span>
                       }
@@ -121,8 +125,9 @@
             </div>
 
             @if (
-              (application.client.consentRequired && application.clientScopesGranted.length > 0) ||
-              application.additionalGrants.length > 0
+              application.client &&
+              ((application.client.consentRequired && application.clientScopesGranted.length > 0) ||
+                application.additionalGrants.length > 0)
             ) {
               <div class="kc-card-actions">
                 <button
@@ -130,8 +135,8 @@
                   color="warn"
                   type="submit"
                   name="clientId"
-                  [id]="'revoke-' + application.client.clientId"
-                  [value]="application.client.id"
+                  [id]="'revoke-' + (application.client?.clientId ?? application.client?.id)"
+                  [value]="application.client?.id"
                 >
                   <mat-icon>link_off</mat-icon>
                   {{ i18n.msgStr('revoke') }}
