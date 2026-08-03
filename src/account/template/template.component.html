@@ -11,16 +11,14 @@
   <div class="kc-shell">
     <header class="kc-header">
       <div class="kc-brand">
-        @if (active !== 'account') {
-          <button
-            mat-icon-button
-            class="kc-menu-button"
-            [attr.aria-label]="i18n.msgStr('account')"
-            (click)="drawerOpen.set(!drawerOpen())"
-          >
-            <mat-icon>menu</mat-icon>
-          </button>
-        }
+        <button
+          mat-icon-button
+          class="kc-menu-button"
+          [attr.aria-label]="i18n.msgStr('account')"
+          (click)="drawerOpen.set(!drawerOpen())"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
         <span class="kc-brand-title">{{
           $any(realm).displayNameHtml ||
             $any(realm).displayName ||
