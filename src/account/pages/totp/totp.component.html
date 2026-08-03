@@ -89,7 +89,7 @@
 
     @if (passkeysLoading()) {
       <div class="kc-empty-state">
-        <mat-icon>hourglass_empty</mat-icon>
+        <mat-spinner diameter="28"></mat-spinner>
         <span class="kc-empty-title">{{ i18n.msgStr('loading') }}</span>
       </div>
     } @else if (passkeysError()) {

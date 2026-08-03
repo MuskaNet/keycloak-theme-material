@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, forwardRef, inject, signal, type OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ComponentReference } from '@keycloakify/angular/account/classes/component-reference';
 import type { I18n } from '@keycloakify/angular/account/i18n';
 import type { KcContext } from '@keycloakify/angular/account/KcContext';
@@ -16,7 +17,7 @@ import { buildKcActionUrl } from '../../lib/kc-action';
   selector: 'kc-totp',
   templateUrl: 'totp.component.html',
   styleUrl: '../page-common.scss',
-  imports: [MatButtonModule, MatIconModule],
+  imports: [MatButtonModule, MatIconModule, MatProgressSpinnerModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {

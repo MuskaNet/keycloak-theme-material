@@ -1,13 +1,20 @@
 @let url = kcContext.url;
 @let stateChecker = kcContext.stateChecker;
-@let applications = kcContext.applications?.applications ?? [];
+@let enrichedApps = applications();
 
 <div class="kc-page">
   <div class="kc-page-header">
     <h2 class="kc-page-title">{{ i18n.msgStr('applicationsHtmlTitle') }}</h2>
   </div>
 
-  @if (applications.length === 0) {
+  @if (loading()) {
+    <div class="kc-page-card">
+      <div class="kc-loading-state">
+        <mat-spinner diameter="32"></mat-spinner>
+        <span>{{ i18n.msgStr('loading') }}</span>
+      </div>
+    </div>
+  } @else if (enrichedApps.length === 0) {
     <div class="kc-page-card">
       <div class="kc-empty-state">
         <mat-icon>apps</mat-icon>
@@ -33,9 +40,20 @@
       />
 
       <div class="kc-card-list">
-        @for (application of applications ?? []; track application) {
-          <div class="kc-card-row">
-            <div class="kc-card-main">
+        @for (application of enrichedApps; track $index) {
+          @let isExpanded = expandedCard() === $index;
+          <div
+            class="kc-card-row kc-app-card-row"
+            [class.kc-card-expanded]="isExpanded"
+          >
+            <!-- Clickable header – always visible -->
+            <div
+              class="kc-card-expand-header"
+              role="button"
+              tabindex="0"
+              (click)="toggleCard($index)"
+              (keydown.enter)="toggleCard($index)"
+            >
               <span class="kc-card-icon">
                 <mat-icon>apps</mat-icon>
               </span>
@@ -43,32 +61,29 @@
               <div class="kc-card-info">
                 <div class="kc-card-title">
                   @if (application.effectiveUrl) {
-                    <a [href]="application.effectiveUrl">
-                      @if (application.client?.name) {
-                        {{ i18n.advancedMsgStr(application.client.name) }}
-                      } @else if (application.client?.clientId) {
-                        {{ application.client.clientId }}
-                      } @else {
-                        {{ application.effectiveUrl }}
-                      }
+                    <a
+                      [href]="application.effectiveUrl"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      (click)="$event.stopPropagation()"
+                    >
+                      {{ displayName(application) }}
+                      <mat-icon class="kc-external-link-icon">open_in_new</mat-icon>
                     </a>
                   } @else {
-                    @if (application.client?.name) {
-                      {{ i18n.advancedMsgStr(application.client.name) }}
-                    } @else if (application.client?.clientId) {
-                      {{ application.client.clientId }}
-                    } @else {
-                      {{ i18n.msgStr('unknownApplication') }}
-                    }
+                    {{ displayName(application) }}
                   }
                 </div>
 
                 <div class="kc-card-meta">
                   <span>
                     <mat-icon>check_circle</mat-icon>
-                    @if (application.client?.consentRequired) {
-                      @for (claim of application.clientScopesGranted; track claim) {
-                        <span class="kc-chip">{{ i18n.advancedMsgStr(claim) }}</span>
+                    @if (application.userConsentRequired) {
+                      @if (application.grantedScopes.length > 0) {
+                        <span class="kc-chip">
+                          {{ application.grantedScopes.length }}
+                          {{ i18n.msgStr('grantedScopes') }}
+                        </span>
                       }
                     } @else {
                       <strong>{{ i18n.msgStr('fullAccess') }}</strong>
@@ -77,19 +92,61 @@
                   @if (application.additionalGrants.length > 0) {
                     <span>
                       <mat-icon>add_circle</mat-icon>
-                      @for (grant of application.additionalGrants; track grant) {
-                        <span class="kc-chip">{{ i18n.advancedMsgStr(grant) }}</span>
-                      }
+                      <span class="kc-chip">
+                        {{ application.additionalGrants.length }}
+                        {{ i18n.msgStr('additionalGrants') }}
+                      </span>
                     </span>
                   }
                 </div>
+              </div>
 
-                @if (
-                  !(application.realmRolesAvailable | isArrayWithEmptyObject) || application.resourceRolesAvailable
-                ) {
-                  <div class="kc-card-chips">
-                    <mat-icon>workspace_premium</mat-icon>
-                    @if (!(application.realmRolesAvailable | isArrayWithEmptyObject)) {
+              <span class="kc-card-expand-icon">
+                <mat-icon>{{ isExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+              </span>
+            </div>
+
+            <!-- Expandable section – grant details -->
+            @if (isExpanded) {
+              <div class="kc-card-expand-body">
+                <!-- Client scopes granted (REST API consent) -->
+                @if (application.userConsentRequired && application.grantedScopes.length > 0) {
+                  <div class="kc-expand-section">
+                    <span class="kc-expand-label">
+                      <mat-icon>checklist</mat-icon>
+                      {{ i18n.msgStr('clientScopesGranted') }}
+                    </span>
+                    <div class="kc-card-chips">
+                      @for (claim of application.grantedScopes; track claim.id) {
+                        <span class="kc-chip">{{ i18n.advancedMsgStr(claim.name) }}</span>
+                      }
+                    </div>
+                  </div>
+                }
+
+                <!-- Additional grants -->
+                @if (application.additionalGrants.length > 0) {
+                  <div class="kc-expand-section">
+                    <span class="kc-expand-label">
+                      <mat-icon>add_circle</mat-icon>
+                      {{ i18n.msgStr('additionalGrants') }}
+                    </span>
+                    <div class="kc-card-chips">
+                      @for (grant of application.additionalGrants; track grant) {
+                        <span class="kc-chip">{{ i18n.advancedMsgStr(grant) }}</span>
+                      }
+                    </div>
+                  </div>
+                }
+
+                <!-- Realm roles -->
+                @if (!(application.realmRolesAvailable | isArrayWithEmptyObject)) {
+                  <div class="kc-expand-section">
+                    <span class="kc-expand-label">
+                      <mat-icon>workspace_premium</mat-icon>
+                      {{ i18n.msgStr('realmRoles') }}
+                    </span>
+                    <div class="kc-card-chips">
                       @for (role of application.realmRolesAvailable; track role) {
                         <span class="kc-chip">
                           @if (role.description) {
@@ -99,9 +156,19 @@
                           }
                         </span>
                       }
-                    }
-                    @if (application.resourceRolesAvailable) {
-                      @for (resource of application.resourceRolesAvailable | keyvalue; track resource.key) {
+                    </div>
+                  </div>
+                }
+
+                <!-- Resource roles (grouped by client) -->
+                @if (application.resourceRolesAvailable) {
+                  @for (resource of application.resourceRolesAvailable | keyvalue; track resource.key) {
+                    <div class="kc-expand-section">
+                      <span class="kc-expand-label">
+                        <mat-icon>folder</mat-icon>
+                        {{ resource.key }}
+                      </span>
+                      <div class="kc-card-chips">
                         @for (clientRole of application.resourceRolesAvailable[resource.key]; track clientRole) {
                           <span class="kc-chip">
                             {{
@@ -115,30 +182,29 @@
                             }}
                           </span>
                         }
-                      }
-                    }
+                      </div>
+                    </div>
+                  }
+                }
+
+                <!-- Revoke consent (REST API DELETE) -->
+                @if (
+                  (application.userConsentRequired && application.grantedScopes.length > 0) ||
+                  application.additionalGrants.length > 0
+                ) {
+                  <div class="kc-expand-actions">
+                    <button
+                      mat-stroked-button
+                      color="warn"
+                      type="button"
+                      [disabled]="revokingClientId() !== null"
+                      (click)="revoke(application)"
+                    >
+                      <mat-icon>link_off</mat-icon>
+                      {{ i18n.msgStr('revoke') }}
+                    </button>
                   </div>
                 }
-              </div>
-            </div>
-
-            @if (
-              application.client &&
-              ((application.client.consentRequired && application.clientScopesGranted.length > 0) ||
-                application.additionalGrants.length > 0)
-            ) {
-              <div class="kc-card-actions">
-                <button
-                  mat-stroked-button
-                  color="warn"
-                  type="submit"
-                  name="clientId"
-                  [id]="'revoke-' + (application.client?.clientId ?? application.client?.id)"
-                  [value]="application.client?.id"
-                >
-                  <mat-icon>link_off</mat-icon>
-                  {{ i18n.msgStr('revoke') }}
-                </button>
               </div>
             }
           </div>

@@ -1,0 +1,128 @@
+/* Applications page – expandable cards.
+   Scoped to this component (Angular view encapsulation): safe to override
+   shared classes from page-common.scss without affecting other pages. */
+
+.kc-loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px 0;
+  font-size: 14px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.kc-card-row.kc-app-card-row {
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0;
+
+  &.kc-card-expanded {
+    background-color: var(--mat-sys-surface-container-high);
+    box-shadow: 0 2px 12px rgb(0 0 0 / 0.08);
+
+    .kc-card-expand-icon {
+      color: var(--mat-sys-primary);
+    }
+  }
+}
+
+.kc-card-expand-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 0;
+  padding: 20px 24px;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: -2px;
+    border-radius: 16px;
+  }
+}
+
+.kc-card-expand-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--mat-sys-outline);
+  transition: color 0.2s;
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.kc-card-expand-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 24px 20px 88px;
+  overflow: hidden;
+  animation: expandIn 0.2s ease-out;
+}
+
+@keyframes expandIn {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+.kc-expand-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kc-expand-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface-variant);
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.kc-expand-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+}
+
+.kc-card-title {
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: var(--mat-sys-primary);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.kc-external-link-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  color: var(--mat-sys-outline);
+}
