@@ -129,7 +129,15 @@ async function navigateRequest(url: string, init?: RequestInit): Promise<void> {
       throw new Error('Target page is not a keycloakify page');
     }
 
-    window.history.pushState({}, '', url);
+    // Keycloak answers form posts with a redirect to the next flow step.
+    // Keep the URL of the page that was actually served (the final redirect
+    // target) so a reload does not re-request a consumed session code.
+    const pageUrl = new URL(response.url || url, window.location.href);
+    if (pageUrl.origin !== window.location.origin) {
+      throw new Error('Target page is not served by Keycloak');
+    }
+
+    window.history.pushState({}, '', pageUrl.href);
     await rebootstrap(kcContext);
     window.scrollTo(0, 0);
   } catch (error) {
@@ -217,21 +225,27 @@ function onDocumentSubmit(event: SubmitEvent): void {
     return;
   }
 
-  const action = new URL(form.getAttribute('action') || window.location.href, window.location.href);
   if (isIdentityLinkRequiredAction()) {
     return;
   }
 
-  if (
-    !isSameSpaHost(action) ||
-    action.origin !== window.location.origin ||
-    (isAuthenticationRedirect(action) && !action.searchParams.has('kc_action'))
-  ) {
+  const action = new URL(form.getAttribute('action') || window.location.href, window.location.href);
+  if (!isSameSpaHost(action) || action.origin !== window.location.origin) {
     return;
   }
 
   const realmPath = window.location.pathname.match(/^(\/realms\/[^/]+)/)?.[1];
-  if (!realmPath || !action.pathname.startsWith(realmPath)) {
+  if (!realmPath) {
+    return;
+  }
+
+  // Only account-console forms are safe to submit via fetch. Login-theme
+  // forms (login, OTP, registration, consent, logout...) can finish the flow
+  // with a 302 to the client application. Such a redirect is cross-origin and
+  // therefore unreadable by fetch (CORS), while the action token has already
+  // been consumed server-side — replaying the request would only produce
+  // "invalid data". Those forms must be submitted natively instead.
+  if (!isAccountConsoleAction(action, realmPath)) {
     return;
   }
 
@@ -253,6 +267,11 @@ function onDocumentSubmit(event: SubmitEvent): void {
     method,
     body: formData,
   });
+}
+
+/** Account console endpoints redirect back to a same-origin account page. */
+function isAccountConsoleAction(url: URL, realmPath: string): boolean {
+  return url.pathname === `${realmPath}/account` || url.pathname.startsWith(`${realmPath}/account/`);
 }
 
 function isIdentityLinkRequiredAction(): boolean {
