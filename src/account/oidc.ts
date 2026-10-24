@@ -1,5 +1,5 @@
-import { createOidc } from 'oidc-spa';
-import { createMockOidc } from 'oidc-spa/mock';
+import { createOidc } from 'oidc-spa/core';
+import { createMockOidc } from 'oidc-spa/core-mock';
 import { oidcEarlyInit } from 'oidc-spa/entrypoint';
 
 /**

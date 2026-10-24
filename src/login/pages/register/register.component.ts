@@ -75,12 +75,12 @@ export class RegisterComponent extends ComponentReference implements OnInit, OnD
   fieldNames = computed(() => this.formFieldStates().map(({ attribute }) => attribute.name));
 
   registrationSteps = computed(() => {
-    const fields = this.fieldNames();
+    const fields: string[] = this.fieldNames();
     const steps: string[][] = [];
 
     // Prioritize: username + email in step 1, password + password-confirm in step 2
-    const identityFields = fields.filter((f) => f === 'username' || f === 'email');
-    const passwordFields = fields.filter((f) => f === 'password' || f === 'password-confirm');
+    const identityFields: string[] = fields.filter((f) => f === 'username' || f === 'email');
+    const passwordFields: string[] = fields.filter((f) => f === 'password' || f === 'password-confirm');
     const remaining = fields.filter((f) => !identityFields.includes(f) && !passwordFields.includes(f));
 
     if (identityFields.length > 0) {

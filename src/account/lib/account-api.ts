@@ -60,7 +60,7 @@ const credentialsMock: CredentialContainer[] = [
     helptext: '',
     iconCssClass: '',
     createAction: 'CONFIGURE_TOTP',
-    updateAction: null,
+    updateAction: undefined,
     removeable: true,
     userCredentialMetadatas: [
       {
@@ -77,7 +77,7 @@ const credentialsMock: CredentialContainer[] = [
     helptext: '',
     iconCssClass: '',
     createAction: 'webauthn-register',
-    updateAction: null,
+    updateAction: undefined,
     removeable: true,
     userCredentialMetadatas: [
       {
@@ -147,7 +147,7 @@ export async function getCredentials(): Promise<CredentialContainer[]> {
   const oidcInstance = await withTimeout(oidc, 40_000, 'Timed out waiting for oidc-spa initialization');
   const { accessToken } = await withTimeout(oidcInstance.getTokens(), 15_000, 'Timed out getting tokens');
 
-  const { issuerUriParsed } = createKeycloakUtils({ issuerUri: oidcInstance.params.issuerUri });
+  const { issuerUriParsed } = createKeycloakUtils({ issuerUri: oidcInstance.issuerUri });
   const { kcHttpRelativePath, realm } = issuerUriParsed;
 
   const response = await fetch(`${kcHttpRelativePath ?? ''}/realms/${realm}/account/credentials`, {
@@ -180,7 +180,7 @@ export async function getApplications(): Promise<RestClientRepresentation[]> {
   const oidcInstance = await withTimeout(oidc, 40_000, 'Timed out waiting for oidc-spa initialization');
   const { accessToken } = await withTimeout(oidcInstance.getTokens(), 15_000, 'Timed out getting tokens');
 
-  const { issuerUriParsed } = createKeycloakUtils({ issuerUri: oidcInstance.params.issuerUri });
+  const { issuerUriParsed } = createKeycloakUtils({ issuerUri: oidcInstance.issuerUri });
   const { kcHttpRelativePath, realm } = issuerUriParsed;
 
   const response = await fetch(`${kcHttpRelativePath ?? ''}/realms/${realm}/account/applications`, {
@@ -204,7 +204,7 @@ async function getAccessToken(): Promise<{ kcHttpRelativePath: string | undefine
   const oidcInstance = await withTimeout(oidc, 40_000, 'Timed out waiting for oidc-spa initialization');
   const { accessToken } = await withTimeout(oidcInstance.getTokens(), 15_000, 'Timed out getting tokens');
 
-  const { issuerUriParsed } = createKeycloakUtils({ issuerUri: oidcInstance.params.issuerUri });
+  const { issuerUriParsed } = createKeycloakUtils({ issuerUri: oidcInstance.issuerUri });
   return { ...issuerUriParsed, accessToken };
 }
 
